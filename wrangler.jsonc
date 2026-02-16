@@ -1,0 +1,19 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "media-api",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-02-12",
+
+	"observability": {
+		"enabled": true
+	},
+
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+
+	"assets": {
+        "directory": "./assets/",
+        "binding": "ASSETS"
+     }
+}
