@@ -1,5 +1,5 @@
 {
-	"name": "cloudflare-workers-openapi",
+	"name": "media-api",
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
@@ -9,13 +9,13 @@
 		"cf-typegen": "wrangler types"
 	},
 	"dependencies": {
-		"chanfana": "^2.6.3",
-		"hono": "^4.6.20",
-		"zod": "^3.24.1"
+		"chanfana": "3.0.0",
+		"hono": "4.11.9",
+		"zod": "4.3.6"
 	},
 	"devDependencies": {
-		"@types/node": "^22.13.0",
-		"@types/service-worker-mock": "^2.0.4",
-		"wrangler": "^4.65.0"
+		"@types/node": "25.2.3",
+		"@types/service-worker-mock": "2.0.4",
+		"wrangler": "4.66.0"
 	}
 }
