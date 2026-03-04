@@ -1,33 +1,25 @@
-import { OpenAPIRoute } from "chanfana";
+import { contentJson, OpenAPIRoute } from "chanfana";
 import { type AppContext } from "../types";
 import { OPENAPI_TAGS } from "./config";
 import { OngoingLiveEventDomainModel } from "./domain/model/OngoingLiveEventDomainModel";
 import { PublishLiveEventDataModel } from "./data/model/PublishLiveEventDataModel";
-import { StringToHmacSignatureMapper } from "./data/mapper/StringToHmacSignatureMapper";
-import { stat, watch } from "node:fs";
+import { StringToHmacSignatureMapper } from "../shared/data/mapper/StringToHmacSignatureMapper";
+import { HttpError } from "../shared/domain/model/HttpError";
 
 export class PublishLiveEvent extends OpenAPIRoute {
 	schema = {
 		tags: OPENAPI_TAGS,
 		summary: "Publish the metadata for a Live Event on YouTube",
 		request: {
-			body: {
-				content: {
-					"application/json": {
-						schema: PublishLiveEventDataModel,
-					},
-				},
-			},
+			body: contentJson(PublishLiveEventDataModel),
 		},
 		responses: {
 			"200": {
 				description: "Returns the captured and transformed metadata for the published Live Event",
-				content: {
-					"application/json": {
-						schema: OngoingLiveEventDomainModel,
-					},
-				},
+				...contentJson(OngoingLiveEventDomainModel),
 			},
+            ...HttpError.schema(),
+            ...HttpError.schema()
 		},
 	};
 
