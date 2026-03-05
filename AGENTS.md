@@ -1,34 +1,18 @@
-# Cloudflare Workers
+# AGENTS.md for Media API
 
-STOP. Your knowledge of Cloudflare Workers APIs and limits may be outdated. Always retrieve current documentation before any Workers, KV, R2, D1, Durable Objects, Queues, Vectorize, AI, or Agents SDK task.
+This project is a simple API for the various needs of Literal Life Church's public media presence.
 
-## Docs
+Thus far, it is capable of these high-level tasks
 
-- https://developers.cloudflare.com/workers/
-- MCP: `https://docs.mcp.cloudflare.com/mcp`
+- Live Streaming: receives and caches metadata from an internal automation engine that is later to used to embed a YouTube Live Stream player onto a website. Publishing this metadata requires authentication. Reading it does not. The metadata is simple. It include the embed link, video title, and description.
 
-For all limits and quotas, retrieve from the product's `/platform/limits/` page. eg. `/workers/platform/limits`
+## Commands Useful in Development
 
-## Commands
+Keep in mind that this runtime supports hot reloads. So, spinning up a local dev instance is often only necessary at the start of a development session.
 
 | Command | Purpose |
-|---------|---------|
-| `npx wrangler dev` | Local development |
-| `npx wrangler deploy` | Deploy to Cloudflare |
-| `npx wrangler types` | Generate TypeScript types |
+| --------- | --------- |
+| `npm run dev` | Local development |
+| `npm run types` | Regenerate TypeScript types |
 
-Run `wrangler types` after changing bindings in wrangler.jsonc.
-
-## Node.js Compatibility
-
-https://developers.cloudflare.com/workers/runtime-apis/nodejs/
-
-## Errors
-
-- **Error 1102** (CPU/Memory exceeded): Retrieve limits from `/workers/platform/limits/`
-- **All errors**: https://developers.cloudflare.com/workers/observability/errors/
-
-## Product Docs
-
-Retrieve API references and limits from:
-`/kv/` · `/r2/` · `/d1/` · `/durable-objects/` · `/queues/` · `/vectorize/` · `/workers-ai/` · `/agents/`
+Run `npm run types` after changing bindings in `wrangler.jsonc`. This will require you to stop the running server. However, the only way to do that is for the developer to send an interrupt signal in their terminal. So, just let the developer know when you need them to stop the project and run it again.
