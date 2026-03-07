@@ -16,7 +16,7 @@ export class ValidateAuthorizationUseCase {
         const authorizationHeader = headers[AUTHORIZATION_HEADER];
 
         if (!authorizationHeader) {
-            throw new UnauthorizedError("Authorization header is missing");
+            throw new UnauthorizedError("Missing the Authorization header");
         }
 
         // Step 2: Verify signature matches expected HMAC signature
@@ -31,12 +31,12 @@ export class ValidateAuthorizationUseCase {
         ]);
 
         if (!crypto.subtle.timingSafeEqual(providedHash, expectedHash)) {
-            throw new UnauthorizedError("Invalid authorization token");
+            throw new UnauthorizedError("Incorrect bearer token");
         }
 
         // Step 3: Verify a timestamp is included in the payload
         if (!payload.hasOwnProperty(AUTHORIZATION_PAYLOAD_REQUEST_TIME_FIELD)) {
-            throw new UnauthorizedError(`The ${AUTHORIZATION_PAYLOAD_REQUEST_TIME_FIELD} is missing from the request payload`);
+            throw new UnauthorizedError(`Missing the \`${AUTHORIZATION_PAYLOAD_REQUEST_TIME_FIELD}\` in the root of the payload`);
         }
 
         // Step 4: Verify the timestamp is within the acceptable range to prevent replay attacks
@@ -50,6 +50,6 @@ export class ValidateAuthorizationUseCase {
             return;
         }
 
-        throw new UnauthorizedError(`The ${AUTHORIZATION_PAYLOAD_REQUEST_TIME_FIELD} is out of range`);
+        throw new UnauthorizedError(`The request has expired. Please send a new request with the \`${AUTHORIZATION_PAYLOAD_REQUEST_TIME_FIELD}\` in the root of the payload indicating the current time when the request was made. Must be within ${AUTHORIZATION_TIMESTAMP_MINIMUM_OFFSET_MS}ms before to ${AUTHORIZATION_TIMESTAMP_MAXIMUM_OFFSET_MS}ms after the current time.`);
     }
 }

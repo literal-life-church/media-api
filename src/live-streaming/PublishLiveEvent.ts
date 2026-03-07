@@ -1,6 +1,8 @@
 import { OpenAPIRoute } from "chanfana";
+import { z } from "zod";
 
 import { type AppContext } from "../types";
+import { NotAValidPublishLiveEventPayloadError } from "./domain/model/NotAValidPublishLiveEventPayloadError";
 import { OngoingLiveEventDomainModelSchema } from "./domain/model/OngoingLiveEventDomainModel";
 import { OPENAPI_TAGS } from "./config";
 import { PublishLiveEventDomainModelSchema } from "./domain/model/PublishLiveEventDomainModel";
@@ -15,6 +17,7 @@ export class PublishLiveEvent extends OpenAPIRoute {
         },
         responses: {
             ...OngoingLiveEventDomainModelSchema(),
+            ...NotAValidPublishLiveEventPayloadError.schema(),
             ...UnauthorizedError.schema(),
         },
     };
@@ -34,5 +37,9 @@ export class PublishLiveEvent extends OpenAPIRoute {
             },
             cancellation: null,
         }, 201);
+    }
+
+    handleValidationError(errors: z.ZodError["issues"]): Response {
+        throw new NotAValidPublishLiveEventPayloadError("Failed to convert payload to PublishLiveEventDomainModel", errors);
     }
 }

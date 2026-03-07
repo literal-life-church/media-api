@@ -27,9 +27,9 @@ export class HttpError extends Error {
         this.statusCode = ctor.statusCode;
 
         if (!cause) {
-            console.error(`${ctor.statusCode}: [${ctor.errorName}] \n\nPUBLIC MESSAGE: ${ctor.publicMessage}\nINTERNAL MESSAGE: ${internalMessage}`);
+            console.error(`${ctor.statusCode}: [${ctor.errorName}] \nPUBLIC MESSAGE: ${ctor.publicMessage}\nINTERNAL MESSAGE: ${internalMessage}`);
         } else {
-            console.error(`${ctor.statusCode}: [${ctor.errorName}] \n\nPUBLIC MESSAGE: ${ctor.publicMessage}\nINTERNAL MESSAGE: ${internalMessage}\n\nCAUSE:`, cause);
+            console.error(`${ctor.statusCode}: [${ctor.errorName}] \nPUBLIC MESSAGE: ${ctor.publicMessage}\nINTERNAL MESSAGE: ${internalMessage}\n\nCAUSE:`, cause);
         }
     }
 
