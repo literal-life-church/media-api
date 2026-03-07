@@ -34,7 +34,7 @@ export const LiveStreamingResponseDomainModel = Obj({
             required: true
         })
     }, {
-        description: "The details of the live event, including the video URLs, name, description, and link publication time. Only present when the 'status' is 'live'.",
+        description: "The details of the live event, including the video URLs, name, description, and link publication time. Only present when the `status` is `live`.",
         required: false
     }).nullable(),
     "cancellation": Obj({
@@ -54,9 +54,9 @@ export const LiveStreamingResponseDomainModel = Obj({
             required: true
         })
     }, {
-        description: "The details of the cancellation, including the reason for cancellation, name of the event, scheduled time of the event, and time of cancellation. Only present when the 'status' is 'canceled'.",
+        description: "The details of the cancellation, including the reason for cancellation, name of the event, scheduled time of the event, and time of cancellation. Only present when the `status` is `canceled`.",
         required: false
     }).nullable(),
 }, {
-    description: "Describes all possible states of a live event, which includes the current status of the event (canceled, live, offline, prewarming), the details of the live event if it is currently live, and the details of the cancellation if it has been canceled. The 'event' field is only present when the status is 'live', and the 'cancellation' field is only present when the status is 'canceled'. If the status is 'offline' or 'prewarming', neither the 'event' nor 'cancellation' fields will be present.",
+    description: "Describes all possible states of a live event, which includes the current status of the event (canceled, live, offline, prewarming), the details of the live event if it is currently live, and the details of the cancellation if it has been canceled. The `event` field is only present when the status is `live`, and the `cancellation` field is only present when the status is `canceled`. If the status is `offline` or `prewarming`, neither the `event` nor `cancellation` fields will be present.",
 });
