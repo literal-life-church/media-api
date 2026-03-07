@@ -1,9 +1,9 @@
-import { contentJson, OpenAPIRoute } from "chanfana";
+import { OpenAPIRoute } from "chanfana";
 
 import { type AppContext } from "../types";
 import { OPENAPI_TAGS } from "./config";
-import { OngoingLiveEventDomainModel } from "./domain/model/OngoingLiveEventDomainModel";
-import { PublishLiveEventDataModel } from "./data/model/PublishLiveEventDataModel";
+import { OngoingLiveEventSchema } from "./domain/model/OngoingLiveEventDomainModel";
+import { PublishLiveEventRequestSchema } from "./data/model/PublishLiveEventDataModel";
 import { UnauthorizedError } from "../shared/domain/model/UnauthorizedError";
 
 export class PublishLiveEvent extends OpenAPIRoute {
@@ -11,22 +11,16 @@ export class PublishLiveEvent extends OpenAPIRoute {
         tags: OPENAPI_TAGS,
         summary: "Publish the metadata for a Live Event on YouTube",
         request: {
-            body: contentJson(PublishLiveEventDataModel),
+            ...PublishLiveEventRequestSchema(),
         },
         responses: {
-            "201": {
-                description: "Returns the captured and transformed metadata for the published Live Event",
-                ...contentJson(OngoingLiveEventDomainModel),
-            },
+            ...OngoingLiveEventSchema(),
             ...UnauthorizedError.schema(),
         },
     };
 
     async handle(c: AppContext) {
-        // Get validated data
         const data = await this.getValidatedData<typeof this.schema>();
-
-        // Retrieve the validated request body
         const liveEventPayload = data.body;
 
         return c.json({

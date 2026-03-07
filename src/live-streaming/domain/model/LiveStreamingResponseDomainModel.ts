@@ -49,7 +49,7 @@ export const LiveStreamingResponseDomainModel = Obj({
             required: true
         }),
         "timeOfEvent": DateTime({
-            example: new Date().toISOString(),
+            example: new Date().toISOString(), // Generates now time in ISO format
             description: "The time in UTC when the live event was scheduled to go live, in ISO 8601 format",
             required: true
         })

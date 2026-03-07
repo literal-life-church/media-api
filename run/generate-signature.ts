@@ -1,6 +1,6 @@
 /**
  * Development utility to generate an HMAC-SHA256 signature for testing authenticated endpoints.
- * Run with: npx tsx run/generate-signature.ts
+ * Run with: `npx tsx run/generate-signature.ts` or `npm run dev:generate-signature`
  */
 
 import { createHmac } from "node:crypto";

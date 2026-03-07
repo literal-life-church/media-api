@@ -1,4 +1,4 @@
-import { DateTime, Obj, Str } from "chanfana";
+import { contentJson, DateTime, Obj, Str } from "chanfana";
 
 import { AUTHORIZATION_TIMESTAMP_MAXIMUM_OFFSET_MS, AUTHORIZATION_TIMESTAMP_MINIMUM_OFFSET_MS } from "../../../shared/config";
 
@@ -26,3 +26,9 @@ export const PublishLiveEventDataModel = Obj({
 }, {
     description: "The data model for publishing a live event, which includes the YouTube video ID, name, description, and the time the request was made.",
 });
+
+export function PublishLiveEventRequestSchema() {
+    return {
+        body: contentJson(PublishLiveEventDataModel)
+    };
+}
