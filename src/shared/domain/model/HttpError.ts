@@ -3,30 +3,34 @@ import { ENVIRONMENT_TYPE } from "../../config";
 import { ErrorResponseDomainModel } from "./ErrorResponseDomainModel";
 
 export class HttpError extends Error {
+    static readonly statusCode: number = 500;
+    static readonly publicMessage: string = "An error occurred";
+    static readonly errorName: string = "GenericHttpError";
+    static readonly schemaDescription: string = "An error occurred while processing the request. This is a generic error response, and more specific error types should be used whenever possible to provide more accurate information about the nature of the error.";
+
     private readonly internalMessage: string;
     private readonly isDevEnvironment: boolean;
     public readonly publicMessage: string;
-    statusCode: number;
+    readonly statusCode: number;
 
-    constructor(
-        internalMessage: string = "An unknown error occurred",
-        publicMessage: string = "An error occurred",
-        statusCode: number = 500,
-        name: string = "GenericHttpError",
-        cause?: unknown
-    ) {
+    constructor(internalMessage: string, cause?: unknown) {
+        const ctor = new.target as typeof HttpError;
         const isDev = ENVIRONMENT_TYPE.toLocaleLowerCase().trim() === "development";
 
-        super(isDev ? internalMessage : publicMessage);
+        super(isDev ? internalMessage : ctor.publicMessage);
         this.isDevEnvironment = isDev;
 
         this.cause = cause;
         this.internalMessage = internalMessage;
-        this.publicMessage = publicMessage;
-        this.name = name;
-        this.statusCode = statusCode;
+        this.publicMessage = ctor.publicMessage;
+        this.name = ctor.errorName;
+        this.statusCode = ctor.statusCode;
 
-        console.error(`${statusCode}: [${name}] \n\nPUBLIC MESSAGE: ${publicMessage}\nINTERNAL MESSAGE: ${internalMessage }`, cause);
+        if (!cause) {
+            console.error(`${ctor.statusCode}: [${ctor.errorName}] \n\nPUBLIC MESSAGE: ${ctor.publicMessage}\nINTERNAL MESSAGE: ${internalMessage}`);
+        } else {
+            console.error(`${ctor.statusCode}: [${ctor.errorName}] \n\nPUBLIC MESSAGE: ${ctor.publicMessage}\nINTERNAL MESSAGE: ${internalMessage}\n\nCAUSE:`, cause);
+        }
     }
 
     toErrorResponse() {
@@ -41,13 +45,15 @@ export class HttpError extends Error {
     // Based on Chanfana's ApiException schema, but adapted for our HttpError class
     // See: https://github.com/cloudflare/chanfana/blob/9b02677468807d49224eb63a3cfb3e1a8fcd922b/src/exceptions.ts#L26
     static schema() {
-        const inst = new this();
-
         return {
-            [inst.statusCode]: {
-                description: inst.publicMessage,
-                ...contentJson(ErrorResponseDomainModel)
+            [this.statusCode]: {
+                description: this.schemaDescription,
+                ...contentJson(ErrorResponseDomainModel(
+                    this.statusCode,
+                    this.publicMessage,
+                    this.errorName
+                ))
             }
-        }
-    };
+        };
+    }
 }

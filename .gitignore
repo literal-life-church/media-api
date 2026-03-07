@@ -167,3 +167,5 @@ dist
 .env*
 !.env.example
 .wrangler/
+.env
+.mcp.json

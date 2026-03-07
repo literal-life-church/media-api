@@ -1,6 +1,7 @@
-import { AUTHORIZATION_HEADER, AUTHORIZATION_PAYLOAD_REQUEST_TIME_FIELD, AUTHORIZATION_REQUEST_SIGNATURE_ALGORITHM_WEB_CRYPTO, AUTHOTIZATION_SIGNING_SECRET, AUTHOTIZATION_TIMESTAMP_MAXIMUM_OFFSET_MS, AUTHOTIZATION_TIMESTAMP_MINIMUM_OFFSET_MS } from "../../config";
+import { AUTHORIZATION_HEADER, AUTHORIZATION_PAYLOAD_REQUEST_TIME_FIELD, AUTHORIZATION_REQUEST_SIGNATURE_ALGORITHM_WEB_CRYPTO, AUTHORIZATION_SIGNING_SECRET, AUTHORIZATION_TIMESTAMP_MAXIMUM_OFFSET_MS, AUTHORIZATION_TIMESTAMP_MINIMUM_OFFSET_MS } from "../../config";
 import { PayloadToRequestTimeMapper } from "../../data/mapper/PayloadToRequestTimeMapper";
 import { StringToHmacSignatureMapper } from "../../data/mapper/StringToHmacSignatureMapper";
+import { UnauthorizedError } from "../model/UnauthorizedError";
 
 export class ValidateAuthorizationUseCase {
     constructor(
@@ -10,16 +11,18 @@ export class ValidateAuthorizationUseCase {
         private readonly stringToHmacSignatureMapper: StringToHmacSignatureMapper = new StringToHmacSignatureMapper()
     ) { }
 
-    async execute(headers: Record<string, string | undefined>, payload: string): Promise<void> {
+    async execute(headers: Record<string, string | undefined>, payload: object): Promise<void> {
         // Step 1: Verify Authorization header is present
         const authorizationHeader = headers[AUTHORIZATION_HEADER];
 
         if (!authorizationHeader) {
-            throw new Error("Authorization header is missing");
+            throw new UnauthorizedError("Authorization header is missing");
         }
 
         // Step 2: Verify signature matches expected HMAC signature
-        const calculatedSignature = this.stringToHmacSignatureMapper.map(payload, AUTHOTIZATION_SIGNING_SECRET);
+        const payloadString = JSON.stringify(payload); // Ensure consistent stringification for signature calculation
+
+        const calculatedSignature = this.stringToHmacSignatureMapper.map(payloadString, AUTHORIZATION_SIGNING_SECRET);
         const givenSignature = authorizationHeader.replace("Bearer ", "");
 
         const [providedHash, expectedHash] = await Promise.all([
@@ -28,26 +31,25 @@ export class ValidateAuthorizationUseCase {
         ]);
 
         if (!crypto.subtle.timingSafeEqual(providedHash, expectedHash)) {
-            throw new Error("Invalid authorization");
+            throw new UnauthorizedError("Invalid authorization token");
         }
 
         // Step 3: Verify a timestamp is included in the payload
-        const payloadObject = JSON.parse(payload);
-
-        if (!payloadObject.hasOwnProperty(AUTHORIZATION_PAYLOAD_REQUEST_TIME_FIELD)) {
-            throw new Error("Timestamp is missing from payload");
+        if (!payload.hasOwnProperty(AUTHORIZATION_PAYLOAD_REQUEST_TIME_FIELD)) {
+            throw new UnauthorizedError(`The ${AUTHORIZATION_PAYLOAD_REQUEST_TIME_FIELD} is missing from the request payload`);
         }
 
         // Step 4: Verify the timestamp is within the acceptable range to prevent replay attacks
-        const allowedMaximumTimestamp = this.now + AUTHOTIZATION_TIMESTAMP_MAXIMUM_OFFSET_MS;
-        const allowedMinimumTimestamp = this.now - AUTHOTIZATION_TIMESTAMP_MINIMUM_OFFSET_MS;
+        const allowedMaximumTimestamp = this.now + AUTHORIZATION_TIMESTAMP_MAXIMUM_OFFSET_MS;
+        const allowedMinimumTimestamp = this.now - AUTHORIZATION_TIMESTAMP_MINIMUM_OFFSET_MS;
 
         const timestamp = this.payloadToRequestTimeMapper.map(payload);
 
         if (timestamp > allowedMinimumTimestamp && timestamp < allowedMaximumTimestamp) {
-            console.log("Timestamp is within the acceptable range.");
+            console.log("Request is authorized");
+            return;
         }
 
-        throw new Error("Timestamp is out of range");
+        throw new UnauthorizedError(`The ${AUTHORIZATION_PAYLOAD_REQUEST_TIME_FIELD} is out of range`);
     }
 }
