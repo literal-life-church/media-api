@@ -8,7 +8,7 @@ import { createInterface } from "node:readline/promises";
 import { execSync } from "node:child_process";
 import { stdin, stdout } from "node:process";
 
-import { AUTHORIZATION_PAYLOAD_REQUEST_TIME_FIELD, AUTHORIZATION_REQUEST_SIGNATURE_ALGORITHM_NODE_CRYPTO, AUTHORIZATION_REQUEST_SIGNATURE_ENCODING } from "../src/shared/config";
+import { AUTHORIZATION_PAYLOAD_REQUEST_TIME_FIELD, AUTHORIZATION_REQUEST_SIGNATURE_ALGORITHM_NODE_CRYPTO, AUTHORIZATION_REQUEST_SIGNATURE_ENCODING, AUTHORIZATION_SIGNING_SECRET } from "../src/shared/config";
 
 const rl = createInterface({ input: stdin, output: stdout });
 
@@ -49,14 +49,11 @@ async function main() {
         ? `Request Body (${AUTHORIZATION_PAYLOAD_REQUEST_TIME_FIELD} updated to current time)`
         : `Request Body (${AUTHORIZATION_PAYLOAD_REQUEST_TIME_FIELD} added)`;
 
-    payload[AUTHORIZATION_PAYLOAD_REQUEST_TIME_FIELD] = new Date().toISOString().replace(/\.\d{3}Z$/, "Z"); // OpenAPI doesn't support milliseconds in date-time format
+    payload[AUTHORIZATION_PAYLOAD_REQUEST_TIME_FIELD] = new Date().toISOString();
 
-    // Step 3: Read secret key
-    const secret = await rl.question("\nEnter your secret key: ");
-
-    // Step 4: Generate signature (must match StringToHmacSignatureMapper)
+    // Step 3: Generate signature (must match StringToHmacSignatureMapper)
     const payloadString = JSON.stringify(payload);
-    const signature = createHmac(AUTHORIZATION_REQUEST_SIGNATURE_ALGORITHM_NODE_CRYPTO, secret)
+    const signature = createHmac(AUTHORIZATION_REQUEST_SIGNATURE_ALGORITHM_NODE_CRYPTO, AUTHORIZATION_SIGNING_SECRET)
         .update(payloadString)
         .digest(AUTHORIZATION_REQUEST_SIGNATURE_ENCODING);
 
@@ -64,7 +61,7 @@ async function main() {
         : process.platform === "darwin" ? "pbcopy"
             : "xclip -selection clipboard";
 
-    // Step 5: Print request body and offer to copy to clipboard
+    // Step 4: Print request body and offer to copy to clipboard
     console.log(`\n--- ${requestTimeLabel} ---`);
     console.log(JSON.stringify(payload, null, 2));
 
@@ -74,7 +71,7 @@ async function main() {
         console.log("Copied! Paste it as your request body, then come back here when ready.");
     }
 
-    // Step 6: Print signature and offer to copy to clipboard
+    // Step 5: Print signature and offer to copy to clipboard
     console.log("\n--- Generated Signature ---");
     console.log(signature);
 
