@@ -1,9 +1,9 @@
 import { OpenAPIRoute } from "chanfana";
 
 import { type AppContext } from "../types";
+import { OngoingLiveEventDomainModelSchema } from "./domain/model/OngoingLiveEventDomainModel";
 import { OPENAPI_TAGS } from "./config";
-import { OngoingLiveEventSchema } from "./domain/model/OngoingLiveEventDomainModel";
-import { PublishLiveEventRequestSchema } from "./data/model/PublishLiveEventDataModel";
+import { PublishLiveEventDomainModelSchema } from "./domain/model/PublishLiveEventDomainModel";
 import { UnauthorizedError } from "../shared/domain/model/UnauthorizedError";
 
 export class PublishLiveEvent extends OpenAPIRoute {
@@ -11,10 +11,10 @@ export class PublishLiveEvent extends OpenAPIRoute {
         tags: OPENAPI_TAGS,
         summary: "Publish the metadata for a Live Event on YouTube",
         request: {
-            ...PublishLiveEventRequestSchema(),
+            ...PublishLiveEventDomainModelSchema(),
         },
         responses: {
-            ...OngoingLiveEventSchema(),
+            ...OngoingLiveEventDomainModelSchema(),
             ...UnauthorizedError.schema(),
         },
     };

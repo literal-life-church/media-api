@@ -10,7 +10,7 @@ export const LiveStreamingResponseDomainModel = Obj({
     "event": Obj({
         "embedUrl": Str({
             example: "https://www.youtube.com/embed/abc123",
-            description: "The URL for embedding the live event video. This is the URL that can be used in an <iframe> to display the live video on a website.",
+            description: "The URL for embedding the live event video. This is the URL that can be used in an `<iframe>` to display the live video on a website.",
             required: true
         }),
         "watchUrl": Str({

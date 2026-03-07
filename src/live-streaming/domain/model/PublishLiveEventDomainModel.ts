@@ -2,7 +2,7 @@ import { contentJson, DateTime, Obj, Str } from "chanfana";
 
 import { AUTHORIZATION_TIMESTAMP_MAXIMUM_OFFSET_MS, AUTHORIZATION_TIMESTAMP_MINIMUM_OFFSET_MS } from "../../../shared/config";
 
-export const PublishLiveEventDataModel = Obj({
+export const PublishLiveEventDomainModel = Obj({
     "videoId": Str({
         example: "abc123",
         description: "YouTube video ID for the live event. This is the unique identifier for the video and can be found in the YouTube URL (e.g. `https://www.youtube.com/watch?v=abc123`). In this case, the video ID is `abc123`.",
@@ -27,8 +27,8 @@ export const PublishLiveEventDataModel = Obj({
     description: "The data model for publishing a live event, which includes the YouTube video ID, name, description, and the time the request was made.",
 });
 
-export function PublishLiveEventRequestSchema() {
+export function PublishLiveEventDomainModelSchema() {
     return {
-        body: contentJson(PublishLiveEventDataModel)
+        body: contentJson(PublishLiveEventDomainModel)
     };
 }
