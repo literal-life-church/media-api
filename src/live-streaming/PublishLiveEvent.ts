@@ -29,7 +29,7 @@ export class PublishLiveEvent extends OpenAPIRoute {
         // Retrieve the validated request body
         const liveEventPayload = data.body;
 
-        return {
+        return c.json({
             status: "live",
             event: {
                 embedUrl: `https://www.youtube.com/embed/${liveEventPayload.videoId}`,
@@ -39,6 +39,6 @@ export class PublishLiveEvent extends OpenAPIRoute {
                 description: liveEventPayload.description,
             },
             cancellation: null,
-        };
+        }, 201);
     }
 }

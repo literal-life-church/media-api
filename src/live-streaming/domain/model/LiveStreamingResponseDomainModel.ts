@@ -3,8 +3,8 @@ import { DateTime, Enumeration, Obj, Str } from "chanfana";
 export const LiveStreamingResponseDomainModel = Obj({
     "status": Enumeration({
         example: "live",
-        description: "The current status of the live event. Can be 'canceled', 'live', or 'offline'.",
-        values: ["canceled", "live", "offline"],
+        description: "The current status of the live event. Can be `canceled`, `live`, `offline`, or `prewarming`.",
+        values: ["canceled", "live", "offline", "prewarming"],
         required: true
     }),
     "event": Obj({
@@ -20,16 +20,16 @@ export const LiveStreamingResponseDomainModel = Obj({
         }),
         "videoId": Str({
             example: "abc123",
-            description: "YouTube video ID for the live event. This is the unique identifier for the video and can be found in the YouTube URL (e.g. https://www.youtube.com/watch?v=abc123). In this case, the video ID is 'abc123'.",
+            description: "YouTube video ID for the live event. This is the unique identifier for the video and can be found in the YouTube URL (e.g. `https://www.youtube.com/watch?v=abc123`). In this case, the video ID is `abc123`.",
             required: true
         }),
         "name": Str({
-            example: "Sunday Morning Service, 06/01/2026",
+            example: "Weekly Outreach Event, 06/01/2026",
             description: "Name of the live event as published on YouTube",
             required: true
         }),
         "description": Str({
-            example: "Join us for our Sunday morning service as we worship together and hear a message from Pastor John.",
+            example: "Join us for our Weekly Outreach Event as we discuss community initiatives and upcoming events.",
             description: "Description of the live event as published on YouTube, in plain text format",
             required: true
         })
@@ -44,7 +44,7 @@ export const LiveStreamingResponseDomainModel = Obj({
             required: true
         }),
         "name": Str({
-            example: "Sunday Morning Service, 06/01/2026",
+            example: "Weekly Outreach Event, 06/01/2026",
             description: "Name of the live event that would have been published on YouTube",
             required: true
         }),
@@ -58,5 +58,5 @@ export const LiveStreamingResponseDomainModel = Obj({
         required: false
     }).nullable(),
 }, {
-    description: "Describes all possible states of a live event, which includes the current status of the event (live, canceled, or offline), the details of the live event if it is currently live, and the details of the cancellation if it has been canceled. The 'event' field is only present when the status is 'live', and the 'cancellation' field is only present when the status is 'canceled'. If the status is 'offline', neither the 'event' nor 'cancellation' fields will be present.",
+    description: "Describes all possible states of a live event, which includes the current status of the event (canceled, live, offline, prewarming), the details of the live event if it is currently live, and the details of the cancellation if it has been canceled. The 'event' field is only present when the status is 'live', and the 'cancellation' field is only present when the status is 'canceled'. If the status is 'offline' or 'prewarming', neither the 'event' nor 'cancellation' fields will be present.",
 });
