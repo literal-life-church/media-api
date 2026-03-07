@@ -1,9 +1,9 @@
 import { contentJson, OpenAPIRoute } from "chanfana";
+
 import { type AppContext } from "../types";
 import { OPENAPI_TAGS } from "./config";
 import { OngoingLiveEventDomainModel } from "./domain/model/OngoingLiveEventDomainModel";
 import { PublishLiveEventDataModel } from "./data/model/PublishLiveEventDataModel";
-import { StringToHmacSignatureMapper } from "../shared/data/mapper/StringToHmacSignatureMapper";
 import { UnauthorizedError } from "../shared/domain/model/UnauthorizedError";
 
 export class PublishLiveEvent extends OpenAPIRoute {
@@ -28,7 +28,6 @@ export class PublishLiveEvent extends OpenAPIRoute {
 
         // Retrieve the validated request body
         const liveEventPayload = data.body;
-        const cleanBody = JSON.stringify(liveEventPayload);
 
         return {
             status: "live",

@@ -1,12 +1,15 @@
 import { ContentfulStatusCode } from "hono/utils/http-status";
 import { fromHono } from "chanfana";
 import { Hono } from "hono";
-import { version } from "../package.json";
 
 import { AuthMiddleware } from "./shared/AuthMiddleware";
+import { description, version } from "../package.json";
+import { ENVIRONMENT_TYPE } from "./shared/config";
 import { HttpError } from "./shared/domain/model/HttpError";
 import { PublishLiveEvent } from "./live-streaming/PublishLiveEvent";
 import { UnknownError } from "./shared/domain/model/UnknownError";
+
+const isDev = ENVIRONMENT_TYPE.toLocaleLowerCase().trim() === "development";
 
 const app = new Hono<{ Bindings: Env }>();
 const openapi = fromHono(app, {
@@ -14,21 +17,26 @@ const openapi = fromHono(app, {
         info: {
             title: "Literal Life Church Media API",
             version: version,
+            description: description,
         },
+        servers: [
+            { url: "http://localhost:8787", description: "Development" },
+        ],
         security: [
             {
                 bearerAuth: [],
             },
         ],
     },
-    docs_url: "/",
+    docs_url: isDev ? "/" : null,
+    openapi_url: isDev ? "/openapi.json" : null,
 });
 
 openapi.registry.registerComponent("securitySchemes", "bearerAuth", {
     type: "http",
     scheme: "bearer",
     bearerFormat: "HMAC-SHA256",
-    description: "The SHA256 HMAC signature for the request. This should be included in the `Authorization` header as a `Bearer` token.<br><br>It is calculated by creating a SHA256 HMAC signature of the request body, adding in a shared secret key, and then encoding the result in base 64 format. Try it with an online tool, the [HMAC Generator](https://www.magicbell.com/tools/hmac-generator).<br><br>When doing this process by hand, you'll want a JSON body that doesn't have any unnecessary whitespace, as that will change the signature. You can paste your payload over [here](https://jsonformatter.org/) and use the *Minify/Compact* button before piping the output into the [HMAC Generator](https://www.magicbell.com/tools/hmac-generator)."
+    description: "The SHA256 HMAC signature for the request. This should be included in the `Authorization` header as a `Bearer` token.<br><br>It is calculated by creating a SHA256 HMAC signature of the request body, adding in a shared secret key, and then encoding the result in base 64 format.<br><br>You can generate your own authorization token in your terminal by running `npm run dev:generate-signature`."
 });
 
 // Endpoints that don't require auth
