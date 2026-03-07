@@ -6,6 +6,7 @@ import { AuthMiddleware } from "./shared/AuthMiddleware";
 import { description, version } from "../package.json";
 import { ENVIRONMENT_TYPE } from "./shared/config";
 import { HttpError } from "./shared/domain/model/HttpError";
+import { NotFoundError } from "./shared/domain/model/NotFoundError";
 import { PublishLiveEvent } from "./live-streaming/PublishLiveEvent";
 import { UnknownError } from "./shared/domain/model/UnknownError";
 
@@ -57,6 +58,12 @@ openapi.onError((error, context) => {
         e = new UnknownError("An unknown error occurred", error);
     }
 
+    return context.json(e.toErrorResponse(), e.statusCode as ContentfulStatusCode);
+});
+
+// 404 for everything else
+openapi.notFound((context) => {
+    const e = new NotFoundError(`No route matched ${context.req.method} ${context.req.path}`);
     return context.json(e.toErrorResponse(), e.statusCode as ContentfulStatusCode);
 });
 
