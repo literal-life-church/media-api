@@ -13,6 +13,10 @@ Keep in mind that this runtime supports hot reloads. So, spinning up a local dev
 | Command | Purpose |
 | --------- | --------- |
 | `npm run dev` | Local development |
+| `npm run db:generate` | Creates migrations for changes to the database schema` |
+| `npm run db:migrate` | Runs all migrations on a given DB instance |
+| `npm run db:studio` | Starts up a local instance of the Drizzle Studio to preview your database |
+| `npm run dev:generate-signature` | Create a request body with a `requestTime` property at the root and a valid authorization `Bearer` token |
 | `npm run dev:types` | Regenerate TypeScript types |
 
 Run `npm run types` after changing bindings in `wrangler.jsonc`. This will require you to stop the running server. However, the only way to do that is for the developer to send an interrupt signal in their terminal. So, just let the developer know when you need them to stop the project and run it again.
