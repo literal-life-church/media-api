@@ -1,26 +1,70 @@
+import { ContentfulStatusCode } from "hono/utils/http-status";
 import { fromHono } from "chanfana";
 import { Hono } from "hono";
-import { TaskCreate } from "./endpoints/taskCreate";
-import { TaskDelete } from "./endpoints/taskDelete";
-import { TaskFetch } from "./endpoints/taskFetch";
-import { TaskList } from "./endpoints/taskList";
 
-// Start a Hono app
+import { AuthMiddleware } from "./shared/AuthMiddleware";
+import { description, version } from "../package.json";
+import { ENVIRONMENT_TYPE } from "./shared/config";
+import { HttpError } from "./shared/domain/model/HttpError";
+import { NotFoundError } from "./shared/domain/model/NotFoundError";
+import { PublishLiveEvent } from "./live-streaming/PublishLiveEvent";
+import { UnknownError } from "./shared/domain/model/UnknownError";
+
+const isDev = ENVIRONMENT_TYPE.toLocaleLowerCase().trim() === "development";
+
 const app = new Hono<{ Bindings: Env }>();
-
-// Setup OpenAPI registry
 const openapi = fromHono(app, {
-	docs_url: "/",
+    schema: {
+        info: {
+            title: "Literal Life Church Media API",
+            version: version,
+            description: description,
+        },
+        servers: [
+            { url: "http://localhost:8787", description: "Development" },
+        ],
+        security: [
+            {
+                bearerAuth: [],
+            },
+        ],
+    },
+    docs_url: isDev ? "/" : null,
+    openapi_url: isDev ? "/openapi.json" : null,
 });
 
-// Register OpenAPI endpoints
-openapi.get("/api/tasks", TaskList);
-openapi.post("/api/tasks", TaskCreate);
-openapi.get("/api/tasks/:taskSlug", TaskFetch);
-openapi.delete("/api/tasks/:taskSlug", TaskDelete);
+openapi.registry.registerComponent("securitySchemes", "bearerAuth", {
+    type: "http",
+    scheme: "bearer",
+    bearerFormat: "HMAC-SHA256",
+    description: "The SHA256 HMAC signature for the request. This should be included in the `Authorization` header as a `Bearer` token.<br><br>It is calculated by creating a SHA256 HMAC signature of the request body, adding in a shared secret key, and then encoding the result in base 64 format.<br><br>You can generate your own authorization token in your terminal by running `npm run dev:generate-signature`."
+});
 
-// You may also register routes for non OpenAPI directly on Hono
-// app.get('/test', (c) => c.text('Hono!'))
+// Endpoints that don't require auth
+// openapi.post("/live-streaming/v1", PublishLiveEvent);
 
-// Export the Hono app
+// Authentication middleware
+openapi.use("/live-streaming/v1", AuthMiddleware);
+
+// Endpoints that require auth
+openapi.post("/live-streaming/v1", PublishLiveEvent);
+
+openapi.onError((error, context) => {
+    let e: HttpError;
+
+    if (error instanceof HttpError) {
+        e = error as HttpError;
+    } else {
+        e = new UnknownError("An unknown error occurred", error);
+    }
+
+    return context.json(e.toErrorResponse(), e.statusCode as ContentfulStatusCode);
+});
+
+// 404 for everything else
+openapi.notFound((context) => {
+    const e = new NotFoundError(`No route matched ${context.req.method} ${context.req.path}`);
+    return context.json(e.toErrorResponse(), e.statusCode as ContentfulStatusCode);
+});
+
 export default app;

@@ -1,21 +1,22 @@
 {
-	"name": "cloudflare-workers-openapi",
+	"name": "media-api",
+    "description": "General-purpose API layer for exposing public information for our live streams and archived sermons",
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"deploy": "wrangler deploy",
 		"dev": "wrangler dev",
-		"start": "wrangler dev",
-		"cf-typegen": "wrangler types"
+		"cf-typegen": "wrangler types",
+
+		"dev:generate-signature": "npx tsx run/generate-signature.ts"
 	},
 	"dependencies": {
-		"chanfana": "^2.6.3",
-		"hono": "^4.6.20",
-		"zod": "^3.24.1"
+		"chanfana": "3.0.0",
+		"hono": "4.11.9",
+		"zod": "4.3.6"
 	},
 	"devDependencies": {
-		"@types/node": "^22.13.0",
-		"@types/service-worker-mock": "^2.0.4",
-		"wrangler": "^4.65.0"
+		"@types/node": "25.2.3",
+		"@types/service-worker-mock": "2.0.4",
+		"wrangler": "4.66.0"
 	}
 }
