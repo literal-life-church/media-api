@@ -1,28 +1,24 @@
 {
-	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "media-api",
-	"main": "src/index.ts",
-	"compatibility_date": "2026-02-12",
-
-	"observability": {
-		"enabled": true
-	},
-
-	"compatibility_flags": [
-		"nodejs_compat"
-	],
-
-	"assets": {
+    "$schema": "node_modules/wrangler/config-schema.json",
+    "name": "media-api",
+    "main": "src/index.ts",
+    "compatibility_date": "2026-02-12",
+    "observability": {
+        "enabled": true
+    },
+    "compatibility_flags": [
+        "nodejs_compat"
+    ],
+    "assets": {
         "directory": "./assets/",
         "binding": "ASSETS"
-     },
-
-	"d1_databases": [
-		{
-			"binding": "DB",
-			"database_name": "media-api",
-			"database_id": "<CLOUDFLARE_D1_DATABASE_ID>",
-			"migrations_dir": "drizzle"
-		}
-	]
+    },
+    "d1_databases": [
+        {
+            "binding": "DB",
+            "database_name": "media-api",
+            "database_id": "9f4a538c-ec95-421a-96b4-b3f51612de21",
+            "migrations_dir": "drizzle"
+        }
+    ]
 }
