@@ -1,4 +1,5 @@
 import { contentJson } from "chanfana";
+
 import { ENVIRONMENT_TYPE } from "../../config";
 import { ErrorResponseDomainModel } from "./ErrorResponseDomainModel";
 
