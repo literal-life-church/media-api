@@ -17,10 +17,10 @@ export class StoreLiveEventDataSource {
     ): Promise<void> {
         await this.db
             .insert(liveEvents)
-            .values({ videoId, name, description, status })
+            .values({ id: 1, videoId, name, description, status })
             .onConflictDoUpdate({
-                target: liveEvents.videoId,
-                set: { name, description, status },
+                target: liveEvents.id,
+                set: { videoId, name, description, status },
             });
     }
 }

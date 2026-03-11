@@ -1,7 +1,7 @@
 {
   "version": "7",
   "dialect": "sqlite",
-  "id": "04bd569a-dc5f-49ce-a698-946a366696e8",
+  "id": "4f71c46f-37f0-47cb-b987-5351f704c6ea",
   "prevIds": [
     "00000000-0000-0000-0000-000000000000"
   ],
@@ -11,8 +11,18 @@
       "entityType": "tables"
     },
     {
-      "type": "text",
+      "type": "integer",
       "notNull": false,
+      "autoincrement": false,
+      "default": "1",
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "live_events"
+    },
+    {
+      "type": "text",
+      "notNull": true,
       "autoincrement": false,
       "default": null,
       "generated": null,
@@ -52,7 +62,7 @@
     },
     {
       "columns": [
-        "video_id"
+        "id"
       ],
       "nameExplicit": false,
       "name": "live_events_pk",
