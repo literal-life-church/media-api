@@ -1,22 +1,30 @@
 {
 	"name": "media-api",
-    "description": "General-purpose API layer for exposing public information for our live streams and archived sermons",
+	"description": "General-purpose API layer for exposing public information for our live streams and archived sermons",
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-		"dev": "wrangler dev",
-		"cf-typegen": "wrangler types",
+        "dev": "wrangler dev",
 
-		"dev:generate-signature": "npx tsx run/generate-signature.ts"
+        "db:generate": "drizzle-kit generate",
+		"db:migrate": "drizzle-kit migrate",
+		"db:studio": "drizzle-kit studio",
+
+		"dev:generate-signature": "npx tsx run/generate-signature.ts",
+		"dev:types": "wrangler types"
 	},
 	"dependencies": {
-		"chanfana": "3.0.0",
-		"hono": "4.11.9",
+		"chanfana": "3.2.1",
+		"drizzle-orm": "1.0.0-beta.17-67b1795",
+		"hono": "4.12.7",
 		"zod": "4.3.6"
 	},
 	"devDependencies": {
-		"@types/node": "25.2.3",
+		"@types/better-sqlite3": "7.6.13",
+		"@types/node": "25.4.0",
 		"@types/service-worker-mock": "2.0.4",
-		"wrangler": "4.66.0"
+		"better-sqlite3": "12.6.2",
+		"drizzle-kit": "1.0.0-beta.17-67b1795",
+		"wrangler": "4.72.0"
 	}
 }

@@ -4,13 +4,11 @@ import { Hono } from "hono";
 
 import { AuthMiddleware } from "./shared/AuthMiddleware";
 import { description, version } from "../package.json";
-import { ENVIRONMENT_TYPE } from "./shared/config";
 import { HttpError } from "./shared/domain/model/HttpError";
+import { IS_DEV } from "./shared/config";
 import { NotFoundError } from "./shared/domain/model/NotFoundError";
 import { PublishLiveEvent } from "./live-streaming/PublishLiveEvent";
 import { UnknownError } from "./shared/domain/model/UnknownError";
-
-const isDev = ENVIRONMENT_TYPE.toLocaleLowerCase().trim() === "development";
 
 const app = new Hono<{ Bindings: Env }>();
 const openapi = fromHono(app, {
@@ -29,8 +27,8 @@ const openapi = fromHono(app, {
             },
         ],
     },
-    docs_url: isDev ? "/" : null,
-    openapi_url: isDev ? "/openapi.json" : null,
+    docs_url: IS_DEV ? "/" : null,
+    openapi_url: IS_DEV ? "/openapi.json" : null,
 });
 
 openapi.registry.registerComponent("securitySchemes", "bearerAuth", {

@@ -1,0 +1,64 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "id": "04bd569a-dc5f-49ce-a698-946a366696e8",
+  "prevIds": [
+    "00000000-0000-0000-0000-000000000000"
+  ],
+  "ddl": [
+    {
+      "name": "live_events",
+      "entityType": "tables"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "video_id",
+      "entityType": "columns",
+      "table": "live_events"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "live_events"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "description",
+      "entityType": "columns",
+      "table": "live_events"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "status",
+      "entityType": "columns",
+      "table": "live_events"
+    },
+    {
+      "columns": [
+        "video_id"
+      ],
+      "nameExplicit": false,
+      "name": "live_events_pk",
+      "table": "live_events",
+      "entityType": "pks"
+    }
+  ],
+  "renames": []
+}

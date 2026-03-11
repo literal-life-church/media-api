@@ -13,6 +13,6 @@ Keep in mind that this runtime supports hot reloads. So, spinning up a local dev
 | Command | Purpose |
 | --------- | --------- |
 | `npm run dev` | Local development |
-| `npm run types` | Regenerate TypeScript types |
+| `npm run dev:types` | Regenerate TypeScript types |
 
 Run `npm run types` after changing bindings in `wrangler.jsonc`. This will require you to stop the running server. However, the only way to do that is for the developer to send an interrupt signal in their terminal. So, just let the developer know when you need them to stop the project and run it again.
