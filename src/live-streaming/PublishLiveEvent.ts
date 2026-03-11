@@ -6,6 +6,8 @@ import { NotAValidPublishLiveEventPayloadError } from "./domain/model/NotAValidP
 import { OngoingLiveEventDomainModelSchema } from "./domain/model/OngoingLiveEventDomainModel";
 import { OPENAPI_TAGS } from "./config";
 import { PublishLiveEventDomainModelSchema } from "./domain/model/PublishLiveEventDomainModel";
+import { StoreLiveEventDataSource } from "./data/datasource/StoreLiveEventDataSource";
+import { StoreLiveEventUseCase } from "./domain/usecase/StoreLiveEventUseCase";
 import { UnauthorizedError } from "../shared/domain/model/UnauthorizedError";
 
 export class PublishLiveEvent extends OpenAPIRoute {
@@ -25,6 +27,10 @@ export class PublishLiveEvent extends OpenAPIRoute {
     async handle(c: AppContext) {
         const data = await this.getValidatedData<typeof this.schema>();
         const liveEventPayload = data.body;
+
+        const dataSource = new StoreLiveEventDataSource(c.env.DB);
+        const useCase = new StoreLiveEventUseCase(dataSource);
+        await useCase.execute(liveEventPayload.videoId, liveEventPayload.name, liveEventPayload.description);
 
         return c.json({
             status: "live",

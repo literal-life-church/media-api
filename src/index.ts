@@ -1,6 +1,7 @@
 import { ContentfulStatusCode } from "hono/utils/http-status";
-import { fromHono } from "chanfana";
+import { extendZodWithOpenApi, fromHono } from "chanfana";
 import { Hono } from "hono";
+import { z } from "zod";
 
 import { AuthMiddleware } from "./shared/AuthMiddleware";
 import { description, version } from "../package.json";
@@ -9,6 +10,8 @@ import { IS_DEV } from "./shared/config";
 import { NotFoundError } from "./shared/domain/model/NotFoundError";
 import { PublishLiveEvent } from "./live-streaming/PublishLiveEvent";
 import { UnknownError } from "./shared/domain/model/UnknownError";
+
+extendZodWithOpenApi(z);
 
 const app = new Hono<{ Bindings: Env }>();
 const openapi = fromHono(app, {
