@@ -1,7 +1,7 @@
 import { contentJson } from "chanfana";
 
-import { ENVIRONMENT_TYPE } from "../../config";
 import { ErrorResponseDomainModel } from "./ErrorResponseDomainModel";
+import { IS_DEV } from "../../config";
 
 export class HttpError extends Error {
     static readonly statusCode: number = 500;
@@ -16,10 +16,9 @@ export class HttpError extends Error {
 
     constructor(internalMessage: string, cause?: unknown) {
         const ctor = new.target as typeof HttpError;
-        const isDev = ENVIRONMENT_TYPE.toLocaleLowerCase().trim() === "development";
 
-        super(isDev ? internalMessage : ctor.publicMessage);
-        this.isDevEnvironment = isDev;
+        super(IS_DEV ? internalMessage : ctor.publicMessage);
+        this.isDevEnvironment = IS_DEV;
 
         this.cause = cause;
         this.internalMessage = internalMessage;

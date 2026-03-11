@@ -13,3 +13,6 @@ export const AUTHORIZATION_TIMESTAMP_MINIMUM_OFFSET_MS = 1 * 60 * 1000;         
 
 // Logging
 export const ENVIRONMENT_TYPE = EnvironmentVariableDataSource("NODE_ENV") || "development";
+
+export const IS_DEV = ENVIRONMENT_TYPE.toLocaleLowerCase().trim() === "development";
+export const IS_PROD = ENVIRONMENT_TYPE.toLocaleLowerCase().trim() === "production";
