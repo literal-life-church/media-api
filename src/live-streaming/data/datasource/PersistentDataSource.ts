@@ -8,6 +8,10 @@ export class PersistentDataSource {
         private readonly db: ReturnType<typeof drizzle> = drizzle(d1)
     ) { }
 
+    async deleteLiveEvent(): Promise<void> {
+        await this.db.delete(liveEvents);
+    }
+
     async createOrUpdateLiveEvent(
         videoId: string,
         name: string,
