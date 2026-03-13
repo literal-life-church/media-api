@@ -4,6 +4,7 @@ import { Hono } from "hono";
 import { z } from "zod";
 
 import { AuthMiddleware } from "./shared/AuthMiddleware";
+import { CancelEvent } from "./live-streaming/CancelEvent";
 import { description, version } from "../package.json";
 import { HttpError } from "./shared/domain/model/HttpError";
 import { IS_DEV } from "./shared/config";
@@ -51,6 +52,7 @@ openapi.use("/live-streaming/v1", AuthMiddleware);
 // Endpoints that require auth
 openapi.delete("/live-streaming/v1", UnpublishLiveEvent);
 openapi.post("/live-streaming/v1", PublishLiveEvent);
+openapi.post("/live-streaming/v1/cancel", CancelEvent);
 
 openapi.onError((error, context) => {
     let e: HttpError;
