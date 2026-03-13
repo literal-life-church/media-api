@@ -6,6 +6,7 @@ import { CancelEventDomainModelSchema } from "./domain/model/CancelEventDomainMo
 import { CanceledLiveEventDomainModelSchema } from "./domain/model/CanceledLiveEventDomainModel";
 import { NotAValidCancelEventPayloadError } from "./domain/model/NotAValidCancelEventPayloadError";
 import { OPENAPI_TAGS } from "./config";
+import { StoreCancellationUseCase } from "./domain/usecase/StoreCancellationUseCase";
 import { UnauthorizedError } from "../shared/domain/model/UnauthorizedError";
 
 export class CancelEvent extends OpenAPIRoute {
@@ -25,6 +26,9 @@ export class CancelEvent extends OpenAPIRoute {
     async handle(c: AppContext) {
         const data = await this.getValidatedData<typeof this.schema>();
         const payload = data.body;
+
+        const useCase = new StoreCancellationUseCase(c.env.DB);
+        await useCase.execute(payload.name, payload.reason, payload.timeOfEvent);
 
         return c.json({
             status: "canceled",
