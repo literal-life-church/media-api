@@ -11,7 +11,7 @@ export const CanceledLiveEventDomainModel = LiveStreamingResponseDomainModel.ext
 export function CanceledLiveEventDomainModelSchema() {
     return {
         "201": {
-            description: "Returns the captured metadata for the canceled live event",
+            description: "Returns the captured and transformed metadata for the canceled live event",
             ...contentJson(CanceledLiveEventDomainModel)
         }
     };

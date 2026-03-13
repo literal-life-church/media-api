@@ -19,7 +19,7 @@ export const CancelEventDomainModel = z.object({
     "requestTime": z.iso.datetime()
         .describe(`The time in UTC this request was made, in ISO 8601 format. Must be within ${AUTHORIZATION_TIMESTAMP_MINIMUM_OFFSET_MS}ms before to ${AUTHORIZATION_TIMESTAMP_MAXIMUM_OFFSET_MS}ms after the current time to prevent replay attacks.`)
         .openapi({ example: new Date().toISOString() }),
-}).describe("The data model for canceling a live event, which includes the reason for cancellation, the name of the event, the originally scheduled time of the event, the cancellation expiration duration, and the time the request was made.");
+}).describe("The data model for canceling an expected, normally scheduled live event, which includes the reason for cancellation, the name of the event, the originally scheduled time of the event, the cancellation expiration duration, and the time the request was made.");
 
 export function CancelEventDomainModelSchema() {
     return {
