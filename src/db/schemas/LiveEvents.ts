@@ -5,7 +5,7 @@ export const liveEvents = sqliteTable("live_events", {
     videoId: text("video_id").notNull().default(""),
     name: text("name").notNull().default(""),
     description: text("description").notNull().default(""),
-    status: text("status", { enum: ["offline", "live", "prewarming", "canceled"] }).notNull(),
     cancellationReason: text("cancellation_reason").notNull().default(""),
     timeOfEvent: text("time_of_event").notNull().default(""),
+    status: text("status", { enum: ["offline", "live", "prewarming", "canceled"] }).notNull(),
 });

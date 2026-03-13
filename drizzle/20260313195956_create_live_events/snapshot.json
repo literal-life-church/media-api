@@ -1,7 +1,7 @@
 {
   "version": "7",
   "dialect": "sqlite",
-  "id": "4d502879-b479-46c5-a9b6-f0b9f5e8819e",
+  "id": "65f782c6-6c10-4257-a483-24ffedf98962",
   "prevIds": [
     "00000000-0000-0000-0000-000000000000"
   ],
@@ -54,16 +54,6 @@
       "type": "text",
       "notNull": true,
       "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "status",
-      "entityType": "columns",
-      "table": "live_events"
-    },
-    {
-      "type": "text",
-      "notNull": true,
-      "autoincrement": false,
       "default": "''",
       "generated": null,
       "name": "cancellation_reason",
@@ -77,6 +67,16 @@
       "default": "''",
       "generated": null,
       "name": "time_of_event",
+      "entityType": "columns",
+      "table": "live_events"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "status",
       "entityType": "columns",
       "table": "live_events"
     },
