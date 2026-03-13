@@ -17,7 +17,7 @@ export class UnpublishLiveEvent extends OpenAPIRoute {
             ...UnpublishLiveEventDomainModelSchema(),
         },
         responses: {
-            ...NoContentDomainModelSchema("The live event has been successfully taken offline"),
+            ...NoContentDomainModelSchema("The live event metadata has been successfully taken offline"),
             ...NotAValidUnpublishLiveEventPayloadError.schema(),
             ...UnauthorizedError.schema(),
         },
