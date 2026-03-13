@@ -10,6 +10,7 @@ import { IS_DEV } from "./shared/config";
 import { NotFoundError } from "./shared/domain/model/NotFoundError";
 import { PublishLiveEvent } from "./live-streaming/PublishLiveEvent";
 import { UnknownError } from "./shared/domain/model/UnknownError";
+import { UnpublishLiveEvent } from "./live-streaming/UnpublishLiveEvent";
 
 extendZodWithOpenApi(z);
 
@@ -48,6 +49,7 @@ openapi.registry.registerComponent("securitySchemes", "bearerAuth", {
 openapi.use("/live-streaming/v1", AuthMiddleware);
 
 // Endpoints that require auth
+openapi.delete("/live-streaming/v1", UnpublishLiveEvent);
 openapi.post("/live-streaming/v1", PublishLiveEvent);
 
 openapi.onError((error, context) => {
