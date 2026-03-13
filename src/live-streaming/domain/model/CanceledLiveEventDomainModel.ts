@@ -4,6 +4,7 @@ import { z } from "zod";
 import { LiveStreamingResponseDomainModel } from "./LiveStreamingResponseDomainModel";
 
 export const CanceledLiveEventDomainModel = LiveStreamingResponseDomainModel.extend({
+    "status": z.literal("canceled").openapi({ example: "canceled" }),
     "event": z.null()
 }).describe("Describes the metadata of a canceled live event, which includes the current status of the event (always `canceled`, in this scenario), and the details of the cancellation. The `event` field is always null for a canceled event.");
 
