@@ -1,7 +1,7 @@
 {
   "version": "7",
   "dialect": "sqlite",
-  "id": "4f71c46f-37f0-47cb-b987-5351f704c6ea",
+  "id": "65f782c6-6c10-4257-a483-24ffedf98962",
   "prevIds": [
     "00000000-0000-0000-0000-000000000000"
   ],
@@ -24,7 +24,7 @@
       "type": "text",
       "notNull": true,
       "autoincrement": false,
-      "default": null,
+      "default": "''",
       "generated": null,
       "name": "video_id",
       "entityType": "columns",
@@ -34,7 +34,7 @@
       "type": "text",
       "notNull": true,
       "autoincrement": false,
-      "default": null,
+      "default": "''",
       "generated": null,
       "name": "name",
       "entityType": "columns",
@@ -44,9 +44,29 @@
       "type": "text",
       "notNull": true,
       "autoincrement": false,
-      "default": null,
+      "default": "''",
       "generated": null,
       "name": "description",
+      "entityType": "columns",
+      "table": "live_events"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "''",
+      "generated": null,
+      "name": "cancellation_reason",
+      "entityType": "columns",
+      "table": "live_events"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "''",
+      "generated": null,
+      "name": "time_of_event",
       "entityType": "columns",
       "table": "live_events"
     },

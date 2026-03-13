@@ -7,6 +7,6 @@ export class StoreLiveEventUseCase {
     ) { }
 
     async execute(videoId: string, name: string, description: string): Promise<void> {
-        await this.dataSource.createOrUpdateLiveEvent(videoId, name, description, "live");
+        await this.dataSource.createOrUpdateLiveEvent(videoId, name, description);
     }
 }

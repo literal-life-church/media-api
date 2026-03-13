@@ -48,6 +48,7 @@ openapi.registry.registerComponent("securitySchemes", "bearerAuth", {
 
 // Authentication middleware
 openapi.use("/live-streaming/v1", AuthMiddleware);
+openapi.use("/live-streaming/v1/*", AuthMiddleware);
 
 // Endpoints that require auth
 openapi.delete("/live-streaming/v1", UnpublishLiveEvent);

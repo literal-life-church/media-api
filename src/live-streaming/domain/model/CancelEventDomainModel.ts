@@ -12,7 +12,7 @@ export const CancelEventDomainModel = z.object({
         .openapi({ example: "Weekly Outreach Event, 06/01/2026" }),
     "timeOfEvent": z.iso.datetime()
         .describe("The time in UTC when the live event was scheduled to go live, in ISO 8601 format")
-        .openapi({ example: new Date().toISOString() }),
+        .openapi({ example: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() }), // Default to 1 day in the future
     "cancellationExpiration": z.number().int().positive()
         .describe("The number of milliseconds after `timeOfEvent` that this cancellation notice will automatically expire, sending the event back to an offline state")
         .openapi({ example: 7200000 }),
