@@ -14,22 +14,23 @@ export class HttpError extends Error {
     public readonly publicMessage: string;
     readonly statusCode: number;
 
-    constructor(internalMessage: string, cause?: unknown) {
+    constructor(internalMessage: string, cause?: unknown, publicMessage?: string) {
         const ctor = new.target as typeof HttpError;
+        const resolvedPublicMessage = publicMessage ?? ctor.publicMessage;
 
-        super(IS_DEV ? internalMessage : ctor.publicMessage);
+        super(IS_DEV ? internalMessage : resolvedPublicMessage);
         this.isDevEnvironment = IS_DEV;
 
         this.cause = cause;
         this.internalMessage = internalMessage;
-        this.publicMessage = ctor.publicMessage;
+        this.publicMessage = resolvedPublicMessage;
         this.name = ctor.errorName;
         this.statusCode = ctor.statusCode;
 
         if (!cause) {
-            console.error(`${ctor.statusCode}: [${ctor.errorName}] \nPUBLIC MESSAGE: ${ctor.publicMessage}\nINTERNAL MESSAGE: ${internalMessage}`);
+            console.error(`${ctor.statusCode}: [${ctor.errorName}] \nPUBLIC MESSAGE: ${resolvedPublicMessage}\nINTERNAL MESSAGE: ${internalMessage}`);
         } else {
-            console.error(`${ctor.statusCode}: [${ctor.errorName}] \nPUBLIC MESSAGE: ${ctor.publicMessage}\nINTERNAL MESSAGE: ${internalMessage}\n\nCAUSE:`, cause);
+            console.error(`${ctor.statusCode}: [${ctor.errorName}] \nPUBLIC MESSAGE: ${resolvedPublicMessage}\nINTERNAL MESSAGE: ${internalMessage}\n\nCAUSE:`, cause);
         }
     }
 
