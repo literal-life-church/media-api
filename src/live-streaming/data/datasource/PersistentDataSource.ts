@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/d1";
 
-import { liveEvents } from "../../../db/schemas/LiveEvents";
+import { type LiveEvent, liveEvents } from "../../../db/schemas/LiveEvents";
 
 export class PersistentDataSource {
     constructor(
@@ -36,7 +36,7 @@ export class PersistentDataSource {
             });
     }
 
-    async getLiveEvent(): Promise<typeof liveEvents.$inferSelect | null> {
+    async getLiveEvent(): Promise<LiveEvent | null> {
         const row = await this.db.select().from(liveEvents).limit(1).get();
         return row ?? null;
     }
