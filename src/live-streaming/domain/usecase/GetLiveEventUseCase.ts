@@ -1,28 +1,5 @@
+import { LiveEventResponse } from "../model/LiveEventStatusDomainModel";
 import { PersistentDataSource } from "../../data/datasource/PersistentDataSource";
-
-type LiveEventResponse =
-    | { status: "offline"; event: null; cancellation: null }
-    | { status: "prewarming"; event: null; cancellation: null }
-    | {
-        status: "live";
-        event: {
-            embedUrl: string;
-            watchUrl: string;
-            videoId: string;
-            name: string;
-            description: string;
-        };
-        cancellation: null;
-    }
-    | {
-        status: "canceled";
-        event: null;
-        cancellation: {
-            reason: string;
-            name: string;
-            timeOfEvent: string;
-        };
-    };
 
 export class GetLiveEventUseCase {
     constructor(
