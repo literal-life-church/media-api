@@ -3,11 +3,11 @@ import { z } from "zod";
 
 import { type AppContext } from "../types";
 import { DeleteLiveEventUseCase } from "./domain/usecase/DeleteLiveEventUseCase";
-import { NoContentDomainModelSchema } from "../shared/domain/model/NoContentDomainModel";
-import { NotAValidUnpublishLiveEventPayloadError } from "./domain/model/NotAValidUnpublishLiveEventPayloadError";
+import { NoContentDomainModelSchema } from "../shared/domain/model/response/NoContentDomainModel";
+import { NotAValidUnpublishLiveEventPayloadError } from "./domain/model/error/NotAValidUnpublishLiveEventPayloadError";
 import { OPENAPI_TAGS } from "./config";
-import { UnauthorizedError } from "../shared/domain/model/UnauthorizedError";
-import { UnpublishLiveEventDomainModelSchema } from "./domain/model/UnpublishLiveEventDomainModel";
+import { UnauthorizedError } from "../shared/domain/model/error/UnauthorizedError";
+import { UnpublishLiveEventDomainModelSchema } from "./domain/model/request/UnpublishLiveEventDomainModel";
 
 export class UnpublishLiveEvent extends OpenAPIRoute {
     schema = {

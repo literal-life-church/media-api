@@ -2,12 +2,12 @@ import { OpenAPIRoute } from "chanfana";
 import { z } from "zod";
 
 import { type AppContext } from "../types";
-import { NotAValidPublishLiveEventPayloadError } from "./domain/model/NotAValidPublishLiveEventPayloadError";
-import { OngoingLiveEventDomainModelSchema } from "./domain/model/OngoingLiveEventDomainModel";
+import { NotAValidPublishLiveEventPayloadError } from "./domain/model/error/NotAValidPublishLiveEventPayloadError";
+import { OngoingLiveEventDomainModelSchema } from "./domain/model/response/OngoingLiveEventDomainModel";
 import { OPENAPI_TAGS } from "./config";
-import { PublishLiveEventDomainModelSchema } from "./domain/model/PublishLiveEventDomainModel";
+import { PublishLiveEventDomainModelSchema } from "./domain/model/request/PublishLiveEventDomainModel";
 import { StoreLiveEventUseCase } from "./domain/usecase/StoreLiveEventUseCase";
-import { UnauthorizedError } from "../shared/domain/model/UnauthorizedError";
+import { UnauthorizedError } from "../shared/domain/model/error/UnauthorizedError";
 
 export class PublishLiveEvent extends OpenAPIRoute {
     schema = {

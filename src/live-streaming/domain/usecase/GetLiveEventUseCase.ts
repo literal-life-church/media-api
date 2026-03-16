@@ -1,4 +1,4 @@
-import { LiveEventResponse } from "../model/LiveEventStatusDomainModel";
+import { LiveEventResponse } from "../model/response/LiveEventStatusDomainModel";
 import { PersistentDataSource } from "../../data/datasource/PersistentDataSource";
 
 export class GetLiveEventUseCase {

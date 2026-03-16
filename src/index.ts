@@ -7,11 +7,11 @@ import { AuthMiddleware } from "./shared/AuthMiddleware";
 import { CancelEvent } from "./live-streaming/CancelEvent";
 import { description, version } from "../package.json";
 import { GetLiveEvent } from "./live-streaming/GetLiveEvent";
-import { HttpError } from "./shared/domain/model/HttpError";
+import { HttpError } from "./shared/domain/model/error/HttpError";
 import { IS_DEV } from "./shared/config";
-import { NotFoundError } from "./shared/domain/model/NotFoundError";
+import { NotFoundError } from "./shared/domain/model/error/NotFoundError";
 import { PublishLiveEvent } from "./live-streaming/PublishLiveEvent";
-import { UnknownError } from "./shared/domain/model/UnknownError";
+import { UnknownError } from "./shared/domain/model/error/UnknownError";
 import { UnpublishLiveEvent } from "./live-streaming/UnpublishLiveEvent";
 
 extendZodWithOpenApi(z);

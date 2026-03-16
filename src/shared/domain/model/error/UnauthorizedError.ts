@@ -1,4 +1,4 @@
-import { AUTHORIZATION_PAYLOAD_REQUEST_TIME_FIELD } from "../../config";
+import { AUTHORIZATION_PAYLOAD_REQUEST_TIME_FIELD } from "../../../config";
 import { HttpError } from "./HttpError";
 
 export class UnauthorizedError extends HttpError {

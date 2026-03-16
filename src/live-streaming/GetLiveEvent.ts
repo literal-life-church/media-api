@@ -2,7 +2,7 @@ import { OpenAPIRoute } from "chanfana";
 
 import { type AppContext } from "../types";
 import { GetLiveEventUseCase } from "./domain/usecase/GetLiveEventUseCase";
-import { LiveEventStatusDomainModelSchema } from "./domain/model/LiveEventStatusDomainModel";
+import { LiveEventStatusDomainModelSchema } from "./domain/model/response/LiveEventStatusDomainModel";
 import { OPENAPI_TAGS } from "./config";
 
 export class GetLiveEvent extends OpenAPIRoute {

@@ -2,12 +2,12 @@ import { OpenAPIRoute } from "chanfana";
 import { z } from "zod";
 
 import { type AppContext } from "../types";
-import { CancelEventDomainModelSchema } from "./domain/model/CancelEventDomainModel";
-import { CanceledLiveEventDomainModelSchema } from "./domain/model/CanceledLiveEventDomainModel";
-import { NotAValidCancelEventPayloadError } from "./domain/model/NotAValidCancelEventPayloadError";
+import { CancelEventDomainModelSchema } from "./domain/model/request/CancelEventDomainModel";
+import { CanceledLiveEventDomainModelSchema } from "./domain/model/response/CanceledLiveEventDomainModel";
+import { NotAValidCancelEventPayloadError } from "./domain/model/error/NotAValidCancelEventPayloadError";
 import { OPENAPI_TAGS } from "./config";
 import { StoreCancellationUseCase } from "./domain/usecase/StoreCancellationUseCase";
-import { UnauthorizedError } from "../shared/domain/model/UnauthorizedError";
+import { UnauthorizedError } from "../shared/domain/model/error/UnauthorizedError";
 
 export class CancelEvent extends OpenAPIRoute {
     schema = {

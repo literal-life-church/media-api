@@ -1,7 +1,7 @@
 import { contentJson } from "chanfana";
 import { z } from "zod";
 
-import { AUTHORIZATION_TIMESTAMP_MAXIMUM_OFFSET_MS, AUTHORIZATION_TIMESTAMP_MINIMUM_OFFSET_MS } from "../../../shared/config";
+import { AUTHORIZATION_TIMESTAMP_MAXIMUM_OFFSET_MS, AUTHORIZATION_TIMESTAMP_MINIMUM_OFFSET_MS } from "../../../../shared/config";
 
 export const CancelEventDomainModel = z.object({
     "reason": z.string()
