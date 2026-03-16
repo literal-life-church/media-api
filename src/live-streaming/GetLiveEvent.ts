@@ -8,7 +8,8 @@ import { OPENAPI_TAGS } from "./config";
 export class GetLiveEvent extends OpenAPIRoute {
     schema = {
         tags: OPENAPI_TAGS,
-        summary: "Get the current status of the live event or details on why it was canceled",
+        summary: "Get the current status of the Live Event or details on why it was canceled",
+        security: [],
         responses: {
             ...LiveEventStatusDomainModelSchema(),
         },
