@@ -6,6 +6,7 @@ import { z } from "zod";
 import { AuthMiddleware } from "./shared/AuthMiddleware";
 import { CancelEvent } from "./live-streaming/CancelEvent";
 import { description, version } from "../package.json";
+import { GetLiveEvent } from "./live-streaming/GetLiveEvent";
 import { HttpError } from "./shared/domain/model/HttpError";
 import { IS_DEV } from "./shared/config";
 import { NotFoundError } from "./shared/domain/model/NotFoundError";
@@ -44,7 +45,7 @@ openapi.registry.registerComponent("securitySchemes", "bearerAuth", {
 });
 
 // Endpoints that don't require auth
-// openapi.post("/live-streaming/v1", PublishLiveEvent);
+openapi.get("/live-streaming/v1", GetLiveEvent);
 
 // Authentication middleware
 openapi.use("/live-streaming/v1", AuthMiddleware);

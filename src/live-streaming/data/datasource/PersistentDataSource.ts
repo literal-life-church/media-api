@@ -36,6 +36,11 @@ export class PersistentDataSource {
             });
     }
 
+    async getLiveEvent(): Promise<typeof liveEvents.$inferSelect | null> {
+        const row = await this.db.select().from(liveEvents).limit(1).get();
+        return row ?? null;
+    }
+
     async deleteLiveEvent(): Promise<void> {
         await this.db.delete(liveEvents);
     }
