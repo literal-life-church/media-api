@@ -1,15 +1,23 @@
-import { OpenAPIRoute } from "chanfana";
+import { OpenAPIRoute, RouteOptions } from "chanfana";
 import { z } from "zod";
 
 import { type AppContext } from "../types";
-import { NotAValidPublishLiveEventPayloadError } from "./domain/model/NotAValidPublishLiveEventPayloadError";
-import { OngoingLiveEventDomainModelSchema } from "./domain/model/OngoingLiveEventDomainModel";
+import { LiveEventMapper } from "./data/mapper/LiveEventMapper";
+import { NotAValidPublishLiveEventPayloadError } from "./domain/model/error/NotAValidPublishLiveEventPayloadError";
+import { OngoingLiveEventDomainModelSchema } from "./domain/model/response/OngoingLiveEventDomainModel";
 import { OPENAPI_TAGS } from "./config";
-import { PublishLiveEventDomainModelSchema } from "./domain/model/PublishLiveEventDomainModel";
+import { PublishLiveEventDomainModelSchema } from "./domain/model/request/PublishLiveEventDomainModel";
 import { StoreLiveEventUseCase } from "./domain/usecase/StoreLiveEventUseCase";
-import { UnauthorizedError } from "../shared/domain/model/UnauthorizedError";
+import { UnauthorizedError } from "../shared/domain/model/error/UnauthorizedError";
 
 export class PublishLiveEvent extends OpenAPIRoute {
+    constructor(
+        params: RouteOptions,
+        private readonly mapper: LiveEventMapper = new LiveEventMapper()
+    ) {
+        super(params);
+    }
+
     schema = {
         tags: OPENAPI_TAGS,
         summary: "Publish the metadata for a Live Event on YouTube",
@@ -30,17 +38,11 @@ export class PublishLiveEvent extends OpenAPIRoute {
         const useCase = new StoreLiveEventUseCase(c.env.DB);
         await useCase.execute(liveEventPayload.videoId, liveEventPayload.name, liveEventPayload.description);
 
-        return c.json({
-            status: "live",
-            event: {
-                embedUrl: `https://www.youtube.com/embed/${liveEventPayload.videoId}`,
-                watchUrl: `https://www.youtube.com/live/${liveEventPayload.videoId}`,
-                videoId: liveEventPayload.videoId,
-                name: liveEventPayload.name,
-                description: liveEventPayload.description,
-            },
-            cancellation: null,
-        }, 201);
+        return c.json(this.mapper.map(
+            liveEventPayload.videoId,
+            liveEventPayload.name,
+            liveEventPayload.description
+        ), 201);
     }
 
     handleValidationError(errors: z.ZodError["issues"]): Response {

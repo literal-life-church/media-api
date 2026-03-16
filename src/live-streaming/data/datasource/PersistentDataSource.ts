@@ -1,6 +1,6 @@
 import { drizzle } from "drizzle-orm/d1";
 
-import { liveEvents } from "../../../db/schemas/LiveEvents";
+import { type LiveEvent, liveEvents } from "../../../db/schemas/LiveEvents";
 
 export class PersistentDataSource {
     constructor(
@@ -34,6 +34,11 @@ export class PersistentDataSource {
                 target: liveEvents.id,
                 set: { videoId, name, description, status: "live", cancellationReason: "", timeOfEvent: "" },
             });
+    }
+
+    async getLiveEvent(): Promise<LiveEvent | null> {
+        const row = await this.db.select().from(liveEvents).limit(1).get();
+        return row ?? null;
     }
 
     async deleteLiveEvent(): Promise<void> {

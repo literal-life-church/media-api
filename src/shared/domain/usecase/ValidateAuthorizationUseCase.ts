@@ -1,7 +1,7 @@
 import { AUTHORIZATION_HEADER, AUTHORIZATION_PAYLOAD_REQUEST_TIME_FIELD, AUTHORIZATION_REQUEST_SIGNATURE_ALGORITHM_WEB_CRYPTO, AUTHORIZATION_SIGNING_SECRET, AUTHORIZATION_TIMESTAMP_MAXIMUM_OFFSET_MS, AUTHORIZATION_TIMESTAMP_MINIMUM_OFFSET_MS } from "../../config";
 import { PayloadToRequestTimeMapper } from "../../data/mapper/PayloadToRequestTimeMapper";
 import { StringToHmacSignatureMapper } from "../../data/mapper/StringToHmacSignatureMapper";
-import { UnauthorizedError } from "../model/UnauthorizedError";
+import { UnauthorizedError } from "../model/error/UnauthorizedError";
 
 export class ValidateAuthorizationUseCase {
     constructor(

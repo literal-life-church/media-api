@@ -1,7 +1,7 @@
 import { contentJson } from "chanfana";
 
 import { ErrorResponseDomainModel } from "./ErrorResponseDomainModel";
-import { IS_DEV } from "../../config";
+import { IS_DEV } from "../../../config";
 
 export class HttpError extends Error {
     static readonly statusCode: number = 500;

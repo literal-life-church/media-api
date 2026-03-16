@@ -1,4 +1,4 @@
-import { NotAValidCancelEventPayloadError } from "../model/NotAValidCancelEventPayloadError";
+import { NotAValidCancelEventPayloadError } from "../model/error/NotAValidCancelEventPayloadError";
 import { PersistentDataSource } from "../../data/datasource/PersistentDataSource";
 
 export class StoreCancellationUseCase {

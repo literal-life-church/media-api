@@ -1,4 +1,4 @@
-import { HttpError } from "../../../shared/domain/model/HttpError";
+import { HttpError } from "../../../../shared/domain/model/error/HttpError";
 
 export class NotAValidUnpublishLiveEventPayloadError extends HttpError {
     static readonly statusCode = 400;

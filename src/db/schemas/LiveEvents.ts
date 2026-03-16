@@ -9,3 +9,5 @@ export const liveEvents = sqliteTable("live_events", {
     timeOfEvent: text("time_of_event").notNull().default(""),
     status: text("status", { enum: ["offline", "live", "prewarming", "canceled"] }).notNull(),
 });
+
+export type LiveEvent = typeof liveEvents.$inferSelect;
