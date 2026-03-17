@@ -10,8 +10,10 @@ export class ScheduleEventCancellationExpirationJobUseCase {
     ) { }
 
     async execute(expirationTime: number): Promise<void> {
-        const stub = this.doNamespace.get(this.doNamespace.idFromName(EVENT_CANCELLATION_EXPIRATION_JOB_ID));
+        const objectId = this.doNamespace.idFromName(EVENT_CANCELLATION_EXPIRATION_JOB_ID);
+        const stub = this.doNamespace.get(objectId);
+
         await stub.scheduleExpiration(expirationTime);
-        await this.dataSource.insertPendingEventCancellationExpirationJob();
+        await this.dataSource.createOrUpdatePendingEventCancellationExpirationJob();
     }
 }

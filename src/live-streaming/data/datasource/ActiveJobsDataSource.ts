@@ -10,13 +10,14 @@ export class ActiveJobsDataSource {
         private readonly db: ReturnType<typeof drizzle> = drizzle(d1)
     ) { }
 
-    async deletePendingEventCancellationExpirationJobs(): Promise<void> {
-        await this.db.delete(activeJobs).where(eq(activeJobs.id, EVENT_CANCELLATION_EXPIRATION_JOB_ID));
-    }
-
-    async insertPendingEventCancellationExpirationJob(): Promise<void> {
+    async createOrUpdatePendingEventCancellationExpirationJob(): Promise<void> {
         await this.db.insert(activeJobs)
             .values({ id: EVENT_CANCELLATION_EXPIRATION_JOB_ID })
-            .onConflictDoNothing();
+            .onConflictDoUpdate({ target: activeJobs.id, set: { id: EVENT_CANCELLATION_EXPIRATION_JOB_ID } });
+    }
+
+    async deletePendingEventCancellationExpirationJobs(): Promise<void> {
+        await this.db.delete(activeJobs)
+            .where(eq(activeJobs.id, EVENT_CANCELLATION_EXPIRATION_JOB_ID));
     }
 }
