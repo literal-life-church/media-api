@@ -10,6 +10,7 @@ import { GetLiveEvent } from "./live-streaming/GetLiveEvent";
 import { HttpError } from "./shared/domain/model/error/HttpError";
 import { IS_DEV } from "./shared/config";
 import { NotFoundError } from "./shared/domain/model/error/NotFoundError";
+import { PrewarmLiveEvent } from "./live-streaming/PrewarmLiveEvent";
 import { PublishLiveEvent } from "./live-streaming/PublishLiveEvent";
 import { UnknownError } from "./shared/domain/model/error/UnknownError";
 import { UnpublishLiveEvent } from "./live-streaming/UnpublishLiveEvent";
@@ -54,6 +55,7 @@ openapi.use("/live-streaming/v1/*", AuthMiddleware);
 openapi.delete("/live-streaming/v1", UnpublishLiveEvent);
 openapi.post("/live-streaming/v1/cancel", CancelEvent);
 openapi.post("/live-streaming/v1/go-live", PublishLiveEvent);
+openapi.post("/live-streaming/v1/prewarm", PrewarmLiveEvent);
 
 openapi.onError((error, context) => {
     let e: HttpError;
