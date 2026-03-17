@@ -1,7 +1,7 @@
 import { ActiveJobsDataSource } from "../../data/datasource/ActiveJobsDataSource";
 import { EventCancellationDurableObject } from "../../EventCancellationDurableObject";
 
-export class CancelEventCancellationJobUseCase {
+export class DeleteEventCancellationExpirationJobUseCase {
     constructor(
         d1: D1Database,
         private readonly doNamespace: DurableObjectNamespace<EventCancellationDurableObject>,

@@ -1,7 +1,5 @@
 import { drizzle } from "drizzle-orm/d1";
-import { eq } from "drizzle-orm";
 
-import { activeJobs } from "../../../db/schemas/ActiveJobs";
 import { type LiveEvent, liveEvents } from "../../../db/schemas/LiveEvents";
 
 export class LiveEventDataSource {
@@ -48,12 +46,12 @@ export class LiveEventDataSource {
             });
     }
 
+    async deleteLiveEvent(): Promise<void> {
+        await this.db.delete(liveEvents);
+    }
+
     async getLiveEvent(): Promise<LiveEvent | null> {
         const row = await this.db.select().from(liveEvents).limit(1).get();
         return row ?? null;
-    }
-
-    async deleteLiveEvent(): Promise<void> {
-        await this.db.delete(liveEvents);
     }
 }

@@ -1,5 +1,5 @@
 import { ActiveJobsDataSource } from "../../data/datasource/ActiveJobsDataSource";
-import { CancelEventCancellationJobUseCase } from "./CancelEventCancellationJobUseCase";
+import { DeleteEventCancellationExpirationJobUseCase } from "./DeleteEventCancellationExpirationJobUseCase";
 import { EventCancellationDurableObject } from "../../EventCancellationDurableObject";
 import { NotAValidCancelEventPayloadError } from "../model/error/NotAValidCancelEventPayloadError";
 import { LiveEventDataSource } from "../../data/datasource/LiveEventDataSource";
@@ -9,7 +9,7 @@ export class StoreCancellationUseCase {
         d1: D1Database,
         private readonly doNamespace: DurableObjectNamespace<EventCancellationDurableObject>,
         private readonly activeJobsDataSource: ActiveJobsDataSource = new ActiveJobsDataSource(d1),
-        private readonly cancelJobUseCase: CancelEventCancellationJobUseCase = new CancelEventCancellationJobUseCase(d1, doNamespace),
+        private readonly cancelJobUseCase: DeleteEventCancellationExpirationJobUseCase = new DeleteEventCancellationExpirationJobUseCase(d1, doNamespace),
         private readonly liveEventDataSource: LiveEventDataSource = new LiveEventDataSource(d1),
         private readonly now: () => Date = () => new Date()
     ) { }
