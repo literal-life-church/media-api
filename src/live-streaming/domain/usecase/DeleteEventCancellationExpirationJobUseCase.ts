@@ -1,11 +1,11 @@
 import { ActiveJobsDataSource } from "../../data/datasource/ActiveJobsDataSource";
 import { EVENT_CANCELLATION_EXPIRATION_JOB_ID } from "../../config";
-import { EventCancellationDurableObject } from "../../EventCancellationDurableObject";
+import { EventCancellationExpirationJobDurableObject } from "../../EventCancellationExpirationJobDurableObject";
 
 export class DeleteEventCancellationExpirationJobUseCase {
     constructor(
         d1: D1Database,
-        private readonly doNamespace: DurableObjectNamespace<EventCancellationDurableObject>,
+        private readonly doNamespace: DurableObjectNamespace<EventCancellationExpirationJobDurableObject>,
         private readonly dataSource: ActiveJobsDataSource = new ActiveJobsDataSource(d1)
     ) { }
 

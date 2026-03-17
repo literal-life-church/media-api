@@ -76,6 +76,6 @@ openapi.notFound((context) => {
 });
 
 // All Durable Object bindings must be exported from the entry module
-export { EventCancellationDurableObject } from "./live-streaming/EventCancellationDurableObject";
+export { EventCancellationExpirationJobDurableObject as EventCancellationExpirationJobDurableObject } from "./live-streaming/EventCancellationExpirationJobDurableObject";
 
 export default app;

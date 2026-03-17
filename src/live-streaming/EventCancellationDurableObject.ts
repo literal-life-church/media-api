@@ -6,7 +6,7 @@ import { activeJobs } from "../db/schemas/ActiveJobs";
 import { EVENT_CANCELLATION_EXPIRATION_JOB_ID } from "./config";
 import { liveEvents } from "../db/schemas/LiveEvents";
 
-export class EventCancellationDurableObject extends DurableObject<Env> {
+export class EventCancellationExpirationJobDurableObject extends DurableObject<Env> {
     async alarm(): Promise<void> {
         const db = drizzle(this.env.DB);
         await db.delete(liveEvents);
