@@ -1,0 +1,127 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "id": "cc8fdec4-3b98-4797-b841-545f60e347ab",
+  "prevIds": [
+    "65f782c6-6c10-4257-a483-24ffedf98962"
+  ],
+  "ddl": [
+    {
+      "name": "active_jobs",
+      "entityType": "tables"
+    },
+    {
+      "name": "live_events",
+      "entityType": "tables"
+    },
+    {
+      "type": "text",
+      "notNull": false,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "active_jobs"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "type",
+      "entityType": "columns",
+      "table": "active_jobs"
+    },
+    {
+      "type": "integer",
+      "notNull": false,
+      "autoincrement": false,
+      "default": "1",
+      "generated": null,
+      "name": "id",
+      "entityType": "columns",
+      "table": "live_events"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "''",
+      "generated": null,
+      "name": "video_id",
+      "entityType": "columns",
+      "table": "live_events"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "''",
+      "generated": null,
+      "name": "name",
+      "entityType": "columns",
+      "table": "live_events"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "''",
+      "generated": null,
+      "name": "description",
+      "entityType": "columns",
+      "table": "live_events"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "''",
+      "generated": null,
+      "name": "cancellation_reason",
+      "entityType": "columns",
+      "table": "live_events"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": "''",
+      "generated": null,
+      "name": "time_of_event",
+      "entityType": "columns",
+      "table": "live_events"
+    },
+    {
+      "type": "text",
+      "notNull": true,
+      "autoincrement": false,
+      "default": null,
+      "generated": null,
+      "name": "status",
+      "entityType": "columns",
+      "table": "live_events"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "active_jobs_pk",
+      "table": "active_jobs",
+      "entityType": "pks"
+    },
+    {
+      "columns": [
+        "id"
+      ],
+      "nameExplicit": false,
+      "name": "live_events_pk",
+      "table": "live_events",
+      "entityType": "pks"
+    }
+  ],
+  "renames": []
+}

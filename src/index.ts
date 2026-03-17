@@ -75,4 +75,7 @@ openapi.notFound((context) => {
     return context.json(e.toErrorResponse(), e.statusCode as ContentfulStatusCode);
 });
 
+// All Durable Object bindings must be exported from the entry module
+export { EventCancellationDurableObject } from "./live-streaming/EventCancellationDurableObject";
+
 export default app;

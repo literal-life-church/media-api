@@ -35,7 +35,7 @@ export class PublishLiveEvent extends OpenAPIRoute {
         const data = await this.getValidatedData<typeof this.schema>();
         const liveEventPayload = data.body;
 
-        const useCase = new StoreLiveEventUseCase(c.env.DB);
+        const useCase = new StoreLiveEventUseCase(c.env.DB, c.env.EVENT_CANCELLATION_DO);
         await useCase.execute(liveEventPayload.videoId, liveEventPayload.name, liveEventPayload.description);
 
         return c.json(this.mapper.map(

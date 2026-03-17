@@ -20,5 +20,21 @@
             "database_id": "9f4a538c-ec95-421a-96b4-b3f51612de21",
             "migrations_dir": "drizzle"
         }
+    ],
+    "durable_objects": {
+        "bindings": [
+            {
+                "name": "EVENT_CANCELLATION_DO",
+                "class_name": "EventCancellationDurableObject"
+            }
+        ]
+    },
+    "migrations": [
+        {
+            "tag": "v1",
+            "new_sqlite_classes": [
+                "EventCancellationDurableObject"
+            ]
+        }
     ]
 }
