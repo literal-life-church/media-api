@@ -35,7 +35,7 @@ export class CancelEventController extends OpenAPIRoute {
         const data = await this.getValidatedData<typeof this.schema>();
         const payload = data.body;
 
-        const useCase = new StoreCancellationUseCase(c.env.DB, c.env.EVENT_CANCELLATION_DO);
+        const useCase = new StoreCancellationUseCase(c.env.DB, c.env.EVENT_CANCELLATION_EXPIRATION_JOB);
         await useCase.execute(payload.name, payload.reason, payload.timeOfEvent, payload.cancellationExpiration);
 
         return c.json(this.mapper.map(

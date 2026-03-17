@@ -24,7 +24,7 @@ export class UnpublishLiveEventController extends OpenAPIRoute {
     };
 
     async handle(c: AppContext) {
-        const useCase = new DeleteLiveEventUseCase(c.env.DB, c.env.EVENT_CANCELLATION_DO);
+        const useCase = new DeleteLiveEventUseCase(c.env.DB, c.env.EVENT_CANCELLATION_EXPIRATION_JOB);
         await useCase.execute();
 
         return c.body(null, 204);

@@ -24,7 +24,7 @@
     "durable_objects": {
         "bindings": [
             {
-                "name": "EVENT_CANCELLATION_DO",
+                "name": "EVENT_CANCELLATION_EXPIRATION_JOB",
                 "class_name": "EventCancellationExpirationJobDurableObject"
             }
         ]
