@@ -1,6 +1,6 @@
 import { ActiveJobsDataSource } from "../../data/datasource/ActiveJobsDataSource";
-import { EVENT_CANCELLATION_EXPIRATION_JOB_ID } from "../../config";
 import { EventCancellationExpirationJobDurableObject } from "../../EventCancellationExpirationJobDurableObject";
+import { EVENT_CANCELLATION_EXPIRATION_JOB_ID } from "../../config";
 
 export class DeleteEventCancellationExpirationJobUseCase {
     constructor(
