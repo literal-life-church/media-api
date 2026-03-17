@@ -1,17 +1,16 @@
-import { ActiveJobsDataSource } from "../../data/datasource/ActiveJobsDataSource";
 import { DeleteEventCancellationExpirationJobUseCase } from "./DeleteEventCancellationExpirationJobUseCase";
 import { EventCancellationDurableObject } from "../../EventCancellationDurableObject";
-import { EVENT_CANCELLATION_ID } from "../../config";
-import { NotAValidCancelEventPayloadError } from "../model/error/NotAValidCancelEventPayloadError";
 import { LiveEventDataSource } from "../../data/datasource/LiveEventDataSource";
+import { NotAValidCancelEventPayloadError } from "../model/error/NotAValidCancelEventPayloadError";
+import { ScheduleEventCancellationExpirationJobUseCase } from "./ScheduleEventCancellationExpirationJobUseCase";
 
 export class StoreCancellationUseCase {
     constructor(
         d1: D1Database,
-        private readonly doNamespace: DurableObjectNamespace<EventCancellationDurableObject>,
-        private readonly activeJobsDataSource: ActiveJobsDataSource = new ActiveJobsDataSource(d1),
+        doNamespace: DurableObjectNamespace<EventCancellationDurableObject>,
         private readonly cancelJobUseCase: DeleteEventCancellationExpirationJobUseCase = new DeleteEventCancellationExpirationJobUseCase(d1, doNamespace),
         private readonly liveEventDataSource: LiveEventDataSource = new LiveEventDataSource(d1),
+        private readonly scheduleJobUseCase: ScheduleEventCancellationExpirationJobUseCase = new ScheduleEventCancellationExpirationJobUseCase(d1, doNamespace),
         private readonly now: () => Date = () => new Date()
     ) { }
 
@@ -28,12 +27,6 @@ export class StoreCancellationUseCase {
         await this.liveEventDataSource.createOrUpdateCancellation(name, cancellationReason, timeOfEvent);
 
         const expirationTime = new Date(timeOfEvent).getTime() + cancellationExpiration;
-
-        // TODO move this to a use case.
-        const id = this.doNamespace.idFromName(EVENT_CANCELLATION_ID);
-        const stub = this.doNamespace.get(id);
-
-        await stub.scheduleExpiration(expirationTime);
-        await this.activeJobsDataSource.insertPendingEventCancellationExpirationJob();
+        await this.scheduleJobUseCase.execute(expirationTime);
     }
 }

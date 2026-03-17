@@ -3,14 +3,14 @@ import { DurableObject } from "cloudflare:workers";
 import { eq } from "drizzle-orm";
 
 import { activeJobs } from "../db/schemas/ActiveJobs";
-import { EVENT_CANCELLATION_ID } from "./config";
+import { EVENT_CANCELLATION_EXPIRATION_JOB_ID } from "./config";
 import { liveEvents } from "../db/schemas/LiveEvents";
 
 export class EventCancellationDurableObject extends DurableObject<Env> {
     async alarm(): Promise<void> {
         const db = drizzle(this.env.DB);
         await db.delete(liveEvents);
-        await db.delete(activeJobs).where(eq(activeJobs.id, EVENT_CANCELLATION_ID));
+        await db.delete(activeJobs).where(eq(activeJobs.id, EVENT_CANCELLATION_EXPIRATION_JOB_ID));
     }
 
     async cancelExpiration(): Promise<void> {
