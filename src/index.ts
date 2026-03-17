@@ -52,8 +52,8 @@ openapi.use("/live-streaming/v1/*", AuthMiddleware);
 
 // Endpoints that require auth
 openapi.delete("/live-streaming/v1", UnpublishLiveEvent);
-openapi.post("/live-streaming/v1", PublishLiveEvent);
 openapi.post("/live-streaming/v1/cancel", CancelEvent);
+openapi.post("/live-streaming/v1/go-live", PublishLiveEvent);
 
 openapi.onError((error, context) => {
     let e: HttpError;
