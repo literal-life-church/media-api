@@ -36,6 +36,16 @@ export class PersistentDataSource {
             });
     }
 
+    async createOrUpdatePrewarmEvent(): Promise<void> {
+        await this.db
+            .insert(liveEvents)
+            .values({ id: 1, status: "prewarming", videoId: "", name: "", description: "", cancellationReason: "", timeOfEvent: "" })
+            .onConflictDoUpdate({
+                target: liveEvents.id,
+                set: { status: "prewarming", videoId: "", name: "", description: "", cancellationReason: "", timeOfEvent: "" },
+            });
+    }
+
     async getLiveEvent(): Promise<LiveEvent | null> {
         const row = await this.db.select().from(liveEvents).limit(1).get();
         return row ?? null;
