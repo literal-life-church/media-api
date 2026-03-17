@@ -4,7 +4,7 @@ import { eq } from "drizzle-orm";
 import { activeJobs } from "../../../db/schemas/ActiveJobs";
 import { type LiveEvent, liveEvents } from "../../../db/schemas/LiveEvents";
 
-export class PersistentDataSource {
+export class LiveEventDataSource {
     constructor(
         d1: D1Database,
         private readonly db: ReturnType<typeof drizzle> = drizzle(d1)
@@ -55,14 +55,5 @@ export class PersistentDataSource {
 
     async deleteLiveEvent(): Promise<void> {
         await this.db.delete(liveEvents);
-    }
-
-    // TODO move job management to its own data source
-    async insertPendingEventCancellationExpirationJob(id: string): Promise<void> {
-        await this.db.insert(activeJobs).values({ id, type: "event_cancellation" });
-    }
-
-    async deletePendingEventCancellationExpirationJobs(): Promise<void> {
-        await this.db.delete(activeJobs).where(eq(activeJobs.type, "event_cancellation"));
     }
 }

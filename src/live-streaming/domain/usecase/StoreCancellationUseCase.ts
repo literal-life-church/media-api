@@ -1,14 +1,16 @@
+import { ActiveJobsDataSource } from "../../data/datasource/ActiveJobsDataSource";
 import { CancelEventCancellationJobUseCase } from "./CancelEventCancellationJobUseCase";
 import { EventCancellationDurableObject } from "../../EventCancellationDurableObject";
 import { NotAValidCancelEventPayloadError } from "../model/error/NotAValidCancelEventPayloadError";
-import { PersistentDataSource } from "../../data/datasource/PersistentDataSource";
+import { LiveEventDataSource } from "../../data/datasource/LiveEventDataSource";
 
 export class StoreCancellationUseCase {
     constructor(
         d1: D1Database,
         private readonly doNamespace: DurableObjectNamespace<EventCancellationDurableObject>,
+        private readonly activeJobsDataSource: ActiveJobsDataSource = new ActiveJobsDataSource(d1),
         private readonly cancelJobUseCase: CancelEventCancellationJobUseCase = new CancelEventCancellationJobUseCase(d1, doNamespace),
-        private readonly dataSource: PersistentDataSource = new PersistentDataSource(d1),
+        private readonly liveEventDataSource: LiveEventDataSource = new LiveEventDataSource(d1),
         private readonly now: () => Date = () => new Date()
     ) { }
 
@@ -22,7 +24,7 @@ export class StoreCancellationUseCase {
         }
 
         await this.cancelJobUseCase.execute();
-        await this.dataSource.createOrUpdateCancellation(name, cancellationReason, timeOfEvent);
+        await this.liveEventDataSource.createOrUpdateCancellation(name, cancellationReason, timeOfEvent);
 
         const expirationTime = new Date(timeOfEvent).getTime() + cancellationExpiration;
 
@@ -30,6 +32,6 @@ export class StoreCancellationUseCase {
         // TODO why multiple IDs?
         const stub = this.doNamespace.get(this.doNamespace.idFromName("event-cancellation"));
         await stub.scheduleExpiration(expirationTime);
-        await this.dataSource.insertPendingEventCancellationExpirationJob(crypto.randomUUID());
+        await this.activeJobsDataSource.insertPendingEventCancellationExpirationJob(crypto.randomUUID());
     }
 }

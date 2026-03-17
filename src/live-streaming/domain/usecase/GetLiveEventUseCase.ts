@@ -1,14 +1,14 @@
 import { CanceledEventMapper } from "../../data/mapper/CanceledEventMapper";
+import { LiveEventDataSource } from "../../data/datasource/LiveEventDataSource";
 import { LiveEventMapper } from "../../data/mapper/LiveEventMapper";
 import { LiveEventResponse } from "../model/response/LiveEventStatusDomainModel";
-import { PersistentDataSource } from "../../data/datasource/PersistentDataSource";
 import { StatusOnlyEventMapper } from "../../data/mapper/StatusOnlyEventMapper";
 
 export class GetLiveEventUseCase {
     constructor(
         d1: D1Database,
         private readonly canceledEventMapper: CanceledEventMapper = new CanceledEventMapper(),
-        private readonly dataSource: PersistentDataSource = new PersistentDataSource(d1),
+        private readonly dataSource: LiveEventDataSource = new LiveEventDataSource(d1),
         private readonly liveEventMapper: LiveEventMapper = new LiveEventMapper(),
         private readonly statusOnlyMapper: StatusOnlyEventMapper = new StatusOnlyEventMapper()
     ) { }
