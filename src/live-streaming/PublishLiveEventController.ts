@@ -10,7 +10,7 @@ import { PublishLiveEventDomainModelSchema } from "./domain/model/request/Publis
 import { StoreLiveEventUseCase } from "./domain/usecase/StoreLiveEventUseCase";
 import { UnauthorizedError } from "../shared/domain/model/error/UnauthorizedError";
 
-export class PublishLiveEvent extends OpenAPIRoute {
+export class PublishLiveEventController extends OpenAPIRoute {
     constructor(
         params: RouteOptions,
         private readonly mapper: LiveEventMapper = new LiveEventMapper()

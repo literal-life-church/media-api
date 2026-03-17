@@ -10,7 +10,7 @@ import { StatusOnlyEventMapper } from "./data/mapper/StatusOnlyEventMapper";
 import { StorePrewarmEventUseCase } from "./domain/usecase/StorePrewarmEventUseCase";
 import { UnauthorizedError } from "../shared/domain/model/error/UnauthorizedError";
 
-export class PrewarmLiveEvent extends OpenAPIRoute {
+export class PrewarmLiveEventController extends OpenAPIRoute {
     constructor(
         params: RouteOptions,
         private readonly mapper: StatusOnlyEventMapper = new StatusOnlyEventMapper()

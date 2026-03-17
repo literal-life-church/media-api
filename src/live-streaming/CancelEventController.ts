@@ -10,7 +10,7 @@ import { OPENAPI_TAGS } from "./config";
 import { StoreCancellationUseCase } from "./domain/usecase/StoreCancellationUseCase";
 import { UnauthorizedError } from "../shared/domain/model/error/UnauthorizedError";
 
-export class CancelEvent extends OpenAPIRoute {
+export class CancelEventController extends OpenAPIRoute {
     constructor(
         params: RouteOptions,
         private readonly mapper: CanceledEventMapper = new CanceledEventMapper()
