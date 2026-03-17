@@ -1,4 +1,5 @@
 import { ActiveJobsDataSource } from "../../data/datasource/ActiveJobsDataSource";
+import { EVENT_CANCELLATION_JOB_NAME } from "../../config";
 import { EventCancellationDurableObject } from "../../EventCancellationDurableObject";
 
 export class DeleteEventCancellationExpirationJobUseCase {
@@ -9,7 +10,9 @@ export class DeleteEventCancellationExpirationJobUseCase {
     ) { }
 
     async execute(): Promise<void> {
-        const stub = this.doNamespace.get(this.doNamespace.idFromName("event-cancellation"));
+        const id = this.doNamespace.idFromName(EVENT_CANCELLATION_JOB_NAME);
+        const stub = this.doNamespace.get(id);
+
         await stub.cancelExpiration();
         await this.dataSource.deletePendingEventCancellationExpirationJobs();
     }
