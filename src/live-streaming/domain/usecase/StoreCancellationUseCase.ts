@@ -1,7 +1,7 @@
 import { ActiveJobsDataSource } from "../../data/datasource/ActiveJobsDataSource";
 import { DeleteEventCancellationExpirationJobUseCase } from "./DeleteEventCancellationExpirationJobUseCase";
 import { EventCancellationDurableObject } from "../../EventCancellationDurableObject";
-import { EVENT_CANCELLATION_JOB_NAME } from "../../config";
+import { EVENT_CANCELLATION_ID } from "../../config";
 import { NotAValidCancelEventPayloadError } from "../model/error/NotAValidCancelEventPayloadError";
 import { LiveEventDataSource } from "../../data/datasource/LiveEventDataSource";
 
@@ -30,7 +30,7 @@ export class StoreCancellationUseCase {
         const expirationTime = new Date(timeOfEvent).getTime() + cancellationExpiration;
 
         // TODO move this to a use case.
-        const id = this.doNamespace.idFromName(EVENT_CANCELLATION_JOB_NAME);
+        const id = this.doNamespace.idFromName(EVENT_CANCELLATION_ID);
         const stub = this.doNamespace.get(id);
 
         await stub.scheduleExpiration(expirationTime);

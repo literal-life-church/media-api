@@ -1,7 +1,7 @@
 {
   "version": "7",
   "dialect": "sqlite",
-  "id": "cc8fdec4-3b98-4797-b841-545f60e347ab",
+  "id": "3bfdc5d6-eb45-42b5-a82f-af7fd5bedb03",
   "prevIds": [
     "65f782c6-6c10-4257-a483-24ffedf98962"
   ],
@@ -21,16 +21,6 @@
       "default": null,
       "generated": null,
       "name": "id",
-      "entityType": "columns",
-      "table": "active_jobs"
-    },
-    {
-      "type": "text",
-      "notNull": true,
-      "autoincrement": false,
-      "default": null,
-      "generated": null,
-      "name": "type",
       "entityType": "columns",
       "table": "active_jobs"
     },
