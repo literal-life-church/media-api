@@ -28,5 +28,7 @@ export class StoreCancellationUseCase {
 
         const expirationTime = new Date(timeOfEvent).getTime() + cancellationExpiration;
         await this.scheduleJobUseCase.execute(expirationTime);
+
+        console.info(`Stored cancellation for event "${name}" with reason "${cancellationReason}". Scheduled automatic expiration job to clear this message at ${new Date(expirationTime).toISOString()}.`);
     }
 }

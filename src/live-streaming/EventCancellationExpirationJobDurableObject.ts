@@ -13,6 +13,7 @@ export class EventCancellationExpirationJobDurableObject extends DurableObject<E
 
     async alarm(): Promise<void> {
         await this.deleteAllEventCacheUseCase.execute();
+        console.info(`Executed event cancellation expiration job at ${new Date().toISOString()}. Cleared all cancellation messages and pending jobs.`);
     }
 
     async cancelExpiration(): Promise<void> {
