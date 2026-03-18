@@ -9,7 +9,7 @@ import { OPENAPI_TAGS } from "./config";
 import { UnauthorizedError } from "../shared/domain/model/error/UnauthorizedError";
 import { UnpublishLiveEventDomainModelSchema } from "./domain/model/request/UnpublishLiveEventDomainModel";
 
-export class UnpublishLiveEvent extends OpenAPIRoute {
+export class UnpublishLiveEventController extends OpenAPIRoute {
     schema = {
         tags: OPENAPI_TAGS,
         summary: "Unpublish the metadata for a Live Event on YouTube",
@@ -24,7 +24,7 @@ export class UnpublishLiveEvent extends OpenAPIRoute {
     };
 
     async handle(c: AppContext) {
-        const useCase = new DeleteLiveEventUseCase(c.env.DB);
+        const useCase = new DeleteLiveEventUseCase(c.env.DB, c.env.EVENT_CANCELLATION_EXPIRATION_JOB);
         await useCase.execute();
 
         return c.body(null, 204);

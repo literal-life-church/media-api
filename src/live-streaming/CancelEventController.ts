@@ -10,7 +10,7 @@ import { OPENAPI_TAGS } from "./config";
 import { StoreCancellationUseCase } from "./domain/usecase/StoreCancellationUseCase";
 import { UnauthorizedError } from "../shared/domain/model/error/UnauthorizedError";
 
-export class CancelEvent extends OpenAPIRoute {
+export class CancelEventController extends OpenAPIRoute {
     constructor(
         params: RouteOptions,
         private readonly mapper: CanceledEventMapper = new CanceledEventMapper()
@@ -35,8 +35,8 @@ export class CancelEvent extends OpenAPIRoute {
         const data = await this.getValidatedData<typeof this.schema>();
         const payload = data.body;
 
-        const useCase = new StoreCancellationUseCase(c.env.DB);
-        await useCase.execute(payload.name, payload.reason, payload.timeOfEvent);
+        const useCase = new StoreCancellationUseCase(c.env.DB, c.env.EVENT_CANCELLATION_EXPIRATION_JOB);
+        await useCase.execute(payload.name, payload.reason, payload.timeOfEvent, payload.cancellationExpiration);
 
         return c.json(this.mapper.map(
             payload.name,

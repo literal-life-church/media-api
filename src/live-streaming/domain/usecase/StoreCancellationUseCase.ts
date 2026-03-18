@@ -1,14 +1,20 @@
+import { DeleteEventCancellationExpirationJobUseCase } from "./DeleteEventCancellationExpirationJobUseCase";
+import { EventCancellationExpirationJobDurableObject } from "../../EventCancellationExpirationJobDurableObject";
+import { LiveEventDataSource } from "../../data/datasource/LiveEventDataSource";
 import { NotAValidCancelEventPayloadError } from "../model/error/NotAValidCancelEventPayloadError";
-import { PersistentDataSource } from "../../data/datasource/PersistentDataSource";
+import { ScheduleEventCancellationExpirationJobUseCase } from "./ScheduleEventCancellationExpirationJobUseCase";
 
 export class StoreCancellationUseCase {
     constructor(
         d1: D1Database,
-        private readonly dataSource: PersistentDataSource = new PersistentDataSource(d1),
+        doNamespace: DurableObjectNamespace<EventCancellationExpirationJobDurableObject>,
+        private readonly cancelJobUseCase: DeleteEventCancellationExpirationJobUseCase = new DeleteEventCancellationExpirationJobUseCase(d1, doNamespace),
+        private readonly liveEventDataSource: LiveEventDataSource = new LiveEventDataSource(d1),
+        private readonly scheduleJobUseCase: ScheduleEventCancellationExpirationJobUseCase = new ScheduleEventCancellationExpirationJobUseCase(d1, doNamespace),
         private readonly now: () => Date = () => new Date()
     ) { }
 
-    async execute(name: string, cancellationReason: string, timeOfEvent: string): Promise<void> {
+    async execute(name: string, cancellationReason: string, timeOfEvent: string, cancellationExpiration: number): Promise<void> {
         if (new Date(timeOfEvent) <= this.now()) {
             throw new NotAValidCancelEventPayloadError(
                 "The timeOfEvent must be in the future",
@@ -17,6 +23,12 @@ export class StoreCancellationUseCase {
             );
         }
 
-        await this.dataSource.createOrUpdateCancellation(name, cancellationReason, timeOfEvent);
+        await this.cancelJobUseCase.execute();
+        await this.liveEventDataSource.createOrUpdateCancellation(name, cancellationReason, timeOfEvent);
+
+        const expirationTime = new Date(timeOfEvent).getTime() + cancellationExpiration;
+        await this.scheduleJobUseCase.execute(expirationTime);
+
+        console.info(`Stored cancellation for event "${name}" with reason "${cancellationReason}". Scheduled automatic expiration job to clear this message at ${new Date(expirationTime).toISOString()}.`);
     }
 }

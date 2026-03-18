@@ -10,7 +10,7 @@ import { PublishLiveEventDomainModelSchema } from "./domain/model/request/Publis
 import { StoreLiveEventUseCase } from "./domain/usecase/StoreLiveEventUseCase";
 import { UnauthorizedError } from "../shared/domain/model/error/UnauthorizedError";
 
-export class PublishLiveEvent extends OpenAPIRoute {
+export class PublishLiveEventController extends OpenAPIRoute {
     constructor(
         params: RouteOptions,
         private readonly mapper: LiveEventMapper = new LiveEventMapper()
@@ -35,7 +35,7 @@ export class PublishLiveEvent extends OpenAPIRoute {
         const data = await this.getValidatedData<typeof this.schema>();
         const liveEventPayload = data.body;
 
-        const useCase = new StoreLiveEventUseCase(c.env.DB);
+        const useCase = new StoreLiveEventUseCase(c.env.DB, c.env.EVENT_CANCELLATION_EXPIRATION_JOB);
         await useCase.execute(liveEventPayload.videoId, liveEventPayload.name, liveEventPayload.description);
 
         return c.json(this.mapper.map(

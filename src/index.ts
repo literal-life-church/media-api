@@ -4,16 +4,16 @@ import { Hono } from "hono";
 import { z } from "zod";
 
 import { AuthMiddleware } from "./shared/AuthMiddleware";
-import { CancelEvent } from "./live-streaming/CancelEvent";
+import { CancelEventController } from "./live-streaming/CancelEventController";
 import { description, version } from "../package.json";
-import { GetLiveEvent } from "./live-streaming/GetLiveEvent";
+import { GetLiveEventController } from "./live-streaming/GetLiveEventController";
 import { HttpError } from "./shared/domain/model/error/HttpError";
 import { IS_DEV } from "./shared/config";
 import { NotFoundError } from "./shared/domain/model/error/NotFoundError";
-import { PrewarmLiveEvent } from "./live-streaming/PrewarmLiveEvent";
-import { PublishLiveEvent } from "./live-streaming/PublishLiveEvent";
+import { PrewarmLiveEventController } from "./live-streaming/PrewarmLiveEventController";
+import { PublishLiveEventController } from "./live-streaming/PublishLiveEventController";
 import { UnknownError } from "./shared/domain/model/error/UnknownError";
-import { UnpublishLiveEvent } from "./live-streaming/UnpublishLiveEvent";
+import { UnpublishLiveEventController } from "./live-streaming/UnpublishLiveEventController";
 
 extendZodWithOpenApi(z);
 
@@ -46,16 +46,16 @@ openapi.registry.registerComponent("securitySchemes", "bearerAuth", {
 });
 
 // Endpoints that don't require auth
-openapi.get("/live-streaming/v1", GetLiveEvent);
+openapi.get("/live-streaming/v1", GetLiveEventController);
 
 // Authentication middleware
 openapi.use("/live-streaming/v1/*", AuthMiddleware);
 
 // Endpoints that require auth
-openapi.delete("/live-streaming/v1", UnpublishLiveEvent);
-openapi.post("/live-streaming/v1/cancel", CancelEvent);
-openapi.post("/live-streaming/v1/go-live", PublishLiveEvent);
-openapi.post("/live-streaming/v1/prewarm", PrewarmLiveEvent);
+openapi.delete("/live-streaming/v1", UnpublishLiveEventController);
+openapi.post("/live-streaming/v1/cancel", CancelEventController);
+openapi.post("/live-streaming/v1/go-live", PublishLiveEventController);
+openapi.post("/live-streaming/v1/prewarm", PrewarmLiveEventController);
 
 openapi.onError((error, context) => {
     let e: HttpError;
@@ -74,5 +74,8 @@ openapi.notFound((context) => {
     const e = new NotFoundError(`No route matched ${context.req.method} ${context.req.path}`);
     return context.json(e.toErrorResponse(), e.statusCode as ContentfulStatusCode);
 });
+
+// All Durable Object bindings must be exported from the entry module
+export { EventCancellationExpirationJobDurableObject } from "./live-streaming/EventCancellationExpirationJobDurableObject"
 
 export default app;

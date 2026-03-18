@@ -2,7 +2,7 @@ import { drizzle } from "drizzle-orm/d1";
 
 import { type LiveEvent, liveEvents } from "../../../db/schemas/LiveEvents";
 
-export class PersistentDataSource {
+export class LiveEventDataSource {
     constructor(
         d1: D1Database,
         private readonly db: ReturnType<typeof drizzle> = drizzle(d1)
@@ -46,12 +46,12 @@ export class PersistentDataSource {
             });
     }
 
+    async deleteLiveEvent(): Promise<void> {
+        await this.db.delete(liveEvents);
+    }
+
     async getLiveEvent(): Promise<LiveEvent | null> {
         const row = await this.db.select().from(liveEvents).limit(1).get();
         return row ?? null;
-    }
-
-    async deleteLiveEvent(): Promise<void> {
-        await this.db.delete(liveEvents);
     }
 }
