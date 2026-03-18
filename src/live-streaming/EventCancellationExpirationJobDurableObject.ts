@@ -1,16 +1,21 @@
-import { drizzle } from "drizzle-orm/d1";
 import { DurableObject } from "cloudflare:workers";
-import { eq } from "drizzle-orm";
 
-import { activeJobs } from "../db/schemas/ActiveJobs";
-import { EVENT_CANCELLATION_EXPIRATION_JOB_ID } from "./config";
-import { liveEvents } from "../db/schemas/LiveEvents";
+import { ActiveJobsDataSource } from "./data/datasource/ActiveJobsDataSource";
+import { LiveEventDataSource } from "./data/datasource/LiveEventDataSource";
 
 export class EventCancellationExpirationJobDurableObject extends DurableObject<Env> {
+    constructor(
+        ctx: DurableObjectState,
+        env: Env,
+        private readonly activeJobsDataSource: ActiveJobsDataSource = new ActiveJobsDataSource(env.DB),
+        private readonly liveEventDataSource: LiveEventDataSource = new LiveEventDataSource(env.DB)
+    ) {
+        super(ctx, env);
+    }
+
     async alarm(): Promise<void> {
-        const db = drizzle(this.env.DB);
-        await db.delete(liveEvents);
-        await db.delete(activeJobs).where(eq(activeJobs.id, EVENT_CANCELLATION_EXPIRATION_JOB_ID));
+        await this.activeJobsDataSource.deletePendingEventCancellationExpirationJobs();
+        await this.liveEventDataSource.deleteLiveEvent();
     }
 
     async cancelExpiration(): Promise<void> {
