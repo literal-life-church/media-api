@@ -46,16 +46,16 @@ openapi.registry.registerComponent("securitySchemes", "bearerAuth", {
 });
 
 // Endpoints that don't require auth
-openapi.get("/live-streaming/v1", GetLiveEventController);
+openapi.get("/live-streaming", GetLiveEventController);
 
 // Authentication middleware
-openapi.use("/live-streaming/v1/*", AuthMiddleware);
+openapi.use("/live-streaming/*", AuthMiddleware);
 
 // Endpoints that require auth
-openapi.delete("/live-streaming/v1", UnpublishLiveEventController);
-openapi.post("/live-streaming/v1/cancel", CancelEventController);
-openapi.post("/live-streaming/v1/go-live", PublishLiveEventController);
-openapi.post("/live-streaming/v1/prewarm", PrewarmLiveEventController);
+openapi.delete("/live-streaming", UnpublishLiveEventController);
+openapi.post("/live-streaming/cancel", CancelEventController);
+openapi.post("/live-streaming/go-live", PublishLiveEventController);
+openapi.post("/live-streaming/prewarm", PrewarmLiveEventController);
 
 openapi.onError((error, context) => {
     let e: HttpError;
