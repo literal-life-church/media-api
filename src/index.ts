@@ -34,7 +34,8 @@ const openapi = fromHono(app, {
             },
         ],
     },
-    docs_url: IS_DEV ? "/" : null,
+    docs_url: IS_DEV ? "/try" : null,
+    redoc_url: IS_DEV ? "/docs" : null,
     openapi_url: IS_DEV ? "/openapi.json" : null,
 });
 
