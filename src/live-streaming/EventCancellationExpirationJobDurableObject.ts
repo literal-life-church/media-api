@@ -1,21 +1,18 @@
 import { DurableObject } from "cloudflare:workers";
 
-import { ActiveJobsDataSource } from "./data/datasource/ActiveJobsDataSource";
-import { LiveEventDataSource } from "./data/datasource/LiveEventDataSource";
+import { DeleteAllEventCacheUseCase } from "./domain/usecase/DeleteAllEventCacheUseCase";
 
 export class EventCancellationExpirationJobDurableObject extends DurableObject<Env> {
     constructor(
         ctx: DurableObjectState,
         env: Env,
-        private readonly activeJobsDataSource: ActiveJobsDataSource = new ActiveJobsDataSource(env.DB),
-        private readonly liveEventDataSource: LiveEventDataSource = new LiveEventDataSource(env.DB)
+        private readonly deleteAllEventCacheUseCase: DeleteAllEventCacheUseCase = new DeleteAllEventCacheUseCase(env.DB)
     ) {
         super(ctx, env);
     }
 
     async alarm(): Promise<void> {
-        await this.activeJobsDataSource.deletePendingEventCancellationExpirationJobs();
-        await this.liveEventDataSource.deleteLiveEvent();
+        await this.deleteAllEventCacheUseCase.execute();
     }
 
     async cancelExpiration(): Promise<void> {
