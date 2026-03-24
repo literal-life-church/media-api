@@ -4,22 +4,38 @@ Our database engine runs on [Cloudflare D1](https://developers.cloudflare.com/d1
 
 Drizzle has first-class support for [Cloudflare D1](https://orm.drizzle.team/docs/get-started/d1-new).
 
+## Tables
+
+### `live_events`
+
+Defined in `src/db/schemas/LiveEvents.ts`. Holds a single row (id is always `1`) representing the current live event state. All writes use an upsert pattern (`INSERT ... ON CONFLICT DO UPDATE`) to maintain the single-row invariant.
+
+Fields: `id`, `videoId`, `name`, `description`, `cancellationReason`, `timeOfEvent`, `status` (enum: `offline`, `live`, `prewarming`, `canceled`).
+
+### `active_jobs`
+
+Defined in `src/db/schemas/ActiveJobs.ts`. Tracks active Durable Object alarm jobs. A row's presence indicates a pending job; its absence means no job is scheduled.
+
+The only job in use is the cancellation expiration job, stored with `id = EVENT_CANCELLATION_EXPIRATION_JOB_ID` (from `src/live-streaming/config.ts`). Never hardcode this string — always import the constant.
+
 ## Drizzle's Responsibilities
 
-Here is what Drizzle is responsible for:
+- **Schema creation:** All schema definitions are in `src/db/schemas/`. One file per table, PascalCase filename matching the table concept (e.g., `LiveEvents.ts` for `live_events`). All constraints and type definitions go here.
+- **Migration generation:** Run `npx drizzle-kit generate --name=<snake_case_description>` to create a new migration. Output goes in `drizzle/<timestamp>_<name>/migration.sql`. These files are managed by Drizzle — do not edit them manually.
+- **Migration application:** Run `npx drizzle-kit migrate` or `npm run db:migrate` to apply pending migrations.
 
-- **Schema creation:** All schema definitions are located under `src/db/schemas`. There is 1 table per TypeScript file. These are note SQL files, but are used by the Drizzle ORM. The file is named in PascalCase based on the table_name. The table_name is lower snake case. All information about that table, such as the declaration, constraints, etc. Go into these files.
-- **Migration file generation:** All migration scripts are located under `drizzle`. Each migration operation has a folder with a timestamp and a snake_case title briefly showing what changed. These migrations are manged by `drizzle-kit` and can be created with something like this: `npx drizzle-kit generate --name=create_live_events`. All of the files in here are managed by Drizzle and consist of SQL files and JSON snapshot data.
-- **Migration application:** Drizzle also handles this. It can be accomplished by running `npx drizzle-kit migrate` or `npm run db:migrate`.
+### Drizzle v1 Beta Note
+
+This project uses Drizzle v1 Beta (`1.0.0-beta.x`). The migration structure differs from stable releases: each migration is a subdirectory containing `migration.sql` — there is no `journal.json`. The `drizzle-orm` and `drizzle-kit` packages must always stay on the same beta version.
 
 ## Workflow
 
-All development is handled by the Cloudflare Workers SDK. That is to say, local development uses a local database, never a remote one.
+All development uses the Cloudflare Workers SDK with a local SQLite database — never a remote one. After changing schema files, regenerate TypeScript types with `npm run dev:types`.
 
 ## LLMs
 
-Here are some useful resources regarding our database and ORM library:
+Useful resources:
 
-- Cloudflare LLMs: https://developers.cloudflare.com/llms.txt
-- Cloudflare D1 LLMs: https://developers.cloudflare.com/d1/llms.txt
-- Drizzle: https://orm.drizzle.team/llms.txt
+- Cloudflare LLMs: <https://developers.cloudflare.com/llms.txt>
+- Cloudflare D1 LLMs: <https://developers.cloudflare.com/d1/llms.txt>
+- Drizzle: <https://orm.drizzle.team/llms.txt>
