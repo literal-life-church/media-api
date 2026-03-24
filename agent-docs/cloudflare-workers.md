@@ -40,17 +40,6 @@ await this.ctx.storage.setAlarm(expirationTimeMs);
 await this.ctx.storage.deleteAlarm();
 ```
 
-### Self-Call Deadlock Warning
+### Alarm Lifecycle
 
-**Do not call a DO stub method from within that same DO's `alarm()` handler.** The DO processes one task at a time. While `alarm()` is running, any incoming RPC call is queued — it will not execute until `alarm()` finishes. If `alarm()` awaits that RPC, it deadlocks.
-
-Instead, call data sources directly inside `alarm()` to perform DB operations without going through the DO stub:
-
-```typescript
-// WRONG — deadlocks if called from alarm()
-const stub = namespace.get(namespace.idFromName("event-cancellation"));
-await stub.cancelExpiration(); // this RPC waits for alarm() to finish → deadlock
-
-// CORRECT — call the data source directly
-await this.activeJobsDataSource.deletePendingEventCancellationExpirationJobs();
-```
+When `alarm()` fires, the alarm is already consumed by the CF runtime. There is no need to call `deleteAlarm()` from within `alarm()` — it would be a no-op. The only work needed inside `alarm()` is the cleanup your job was scheduled to perform (e.g., deleting DB rows).
