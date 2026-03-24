@@ -21,8 +21,8 @@ The only job in use is the cancellation expiration job, stored with `id = EVENT_
 ## Drizzle's Responsibilities
 
 - **Schema creation:** All schema definitions are in `src/db/schemas/`. One file per table, PascalCase filename matching the table concept (e.g., `LiveEvents.ts` for `live_events`). All constraints and type definitions go here.
-- **Migration generation:** Run `npx drizzle-kit generate --name=<snake_case_description>` to create a new migration. Output goes in `drizzle/<timestamp>_<name>/migration.sql`. These files are managed by Drizzle — do not edit them manually.
-- **Migration application:** Run `npx drizzle-kit migrate` or `npm run db:migrate` to apply pending migrations.
+- **Migration generation:** Run `npm run db:generate -- --name=<snake_case_description>` to create a new migration. Output goes in `drizzle/<timestamp>_<name>/migration.sql`. These files are managed by Drizzle — do not edit them manually.
+- **Migration application:** Run `npm run db:migrate` to apply pending migrations.
 
 ### Drizzle v1 Beta Note
 
@@ -30,7 +30,7 @@ This project uses Drizzle v1 Beta (`1.0.0-beta.x`). The migration structure diff
 
 ## Workflow
 
-All development uses the Cloudflare Workers SDK with a local SQLite database — never a remote one. After changing schema files, regenerate TypeScript types with `npm run dev:types`.
+All development uses the Cloudflare Workers SDK with a local SQLite database — never a remote one.
 
 ## LLMs
 

@@ -12,7 +12,7 @@ Here is how everything is defined:
 There are two kinds of controllers in this project:
 
 - **Route controllers** (`*Controller.ts`) — HTTP-triggered. Registered in `src/index.ts` via `openapi.get()`, `openapi.post()`, etc.
-- **Durable Object controllers** (e.g., `EventCancellationExpirationJobDurableObject.ts`) — CF runtime-triggered via an alarm, not via an HTTP route. They live at the top level of a feature module, follow the same architectural tier as route controllers, and are exported from `src/index.ts` so the CF runtime can locate them.
+- **Durable Object controllers** (`*DurableObject.ts`) — CF runtime-triggered (e.g., via alarm). They live at the top level of a feature module, follow the same architectural tier as route controllers, and are exported from `src/index.ts` so the CF runtime can locate them.
 
 ## Constructor Injection
 
@@ -79,5 +79,3 @@ In cases where a `Repository` would just proxy straight to a `DataSource` withou
 ```text
 DataSource (returns a DomainModel directly) → UseCase
 ```
-
-This is the pattern used throughout this project — there are no `Repository` classes in the current codebase.

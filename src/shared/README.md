@@ -5,7 +5,7 @@ Cross-cutting concerns used by all feature modules. Nothing in this directory is
 ## Contents
 
 - **`AuthMiddleware.ts`** — Hono middleware that validates the HMAC-SHA256 bearer token on all protected routes
-- **`config.ts`** — environment flags (`IS_DEV`, `IS_PROD`) and authorization timing constants
+- **`config.ts`** — shared configuration, such as environment types and authorization constants
 - **`data/datasource/EnvironmentVariableDataSource.ts`** — thin wrapper around `process.env`
 - **`data/mapper/`** — shared mappers used across domains
 - **`domain/model/error/`** — `HttpError` base class and common error subclasses

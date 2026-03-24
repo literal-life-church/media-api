@@ -13,23 +13,15 @@ General-purpose API layer for exposing public information for Literal Life Churc
 ```bash
 git clone git@github.com:literal-life-church/media-api.git
 cd media-api
-npm install
+
+npm i
+cp .env.example .env.local # Fill in your local secrets
+
+npm run db:migrate # Create DB and apply migrations
+npm run dev # Start the dev server
 ```
 
-Create a `.dev.vars` file in the project root with your local secrets:
-
-```
-AUTHORIZATION_SIGNING_SECRET=your-local-secret-here
-```
-
-Apply database migrations and start the development server:
-
-```bash
-npm run db:migrate
-npm run dev
-```
-
-The API and Swagger UI will be available at `http://localhost:8787/`.
+The API will be available at `http://localhost:8787/`. Interactive docs are at `/try` (Swagger UI) and `/docs` (ReDoc).
 
 ## Scripts
 
@@ -45,12 +37,4 @@ The API and Swagger UI will be available at `http://localhost:8787/`.
 
 ## API
 
-All endpoints live under `/live-streaming`. The `Authorization` header uses a SHA-256 HMAC bearer token. Use `npm run dev:generate-signature` to generate a valid token locally.
-
-| Method | Path | Auth Required | Purpose |
-| --- | --- | --- | --- |
-| `GET` | `/live-streaming` | No | Get the current live event status |
-| `POST` | `/live-streaming/go-live` | Yes | Publish a live event |
-| `POST` | `/live-streaming/cancel` | Yes | Mark a live event as canceled |
-| `POST` | `/live-streaming/prewarm` | Yes | Set a live event to a prewarming state |
-| `DELETE` | `/live-streaming` | Yes | Unpublish a live event, returning it to offline |
+See [`src/live-streaming/README.md`](src/live-streaming/README.md) for the full endpoint reference. The `Authorization` header uses a SHA-256 HMAC bearer token. Use `npm run dev:generate-signature` to generate a valid token locally.
