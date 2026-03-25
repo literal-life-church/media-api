@@ -4,15 +4,17 @@
 	"version": "0.0.1",
 	"private": true,
 	"scripts": {
-        "dev": "wrangler dev",
+        "dev": "run/dev.sh",
 
         "db:generate": "drizzle-kit generate",
 		"db:migrate": "drizzle-kit migrate",
-		"db:reset": "run/reset-db.sh && drizzle-kit migrate",
+		"db:reset": "run/reset-local-db.sh && drizzle-kit migrate",
         "db:studio": "drizzle-kit studio",
 
+		"deploy:secrets": "run/deploy-secrets.sh",
+
 		"dev:generate-signature": "npx tsx run/generate-signature.ts",
-		"dev:types": "wrangler types"
+		"dev:types": "run/dev-types.sh"
 	},
 	"dependencies": {
 		"chanfana": "3.0.0",

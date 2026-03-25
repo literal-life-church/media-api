@@ -19,11 +19,12 @@ The runtime supports hot reloads, so spinning up a local dev instance is usually
 
 | Command | Purpose |
 | --- | --- |
-| `npm run dev` | Local development server |
+| `npm run dev` | Local development server (pulls secrets from Doppler automatically) |
 | `npm run db:generate` | Create a migration for schema changes |
 | `npm run db:migrate` | Apply all migrations to the local database |
 | `npm run db:reset` | Delete local SQLite database files and re-migrate |
 | `npm run db:studio` | Start [Drizzle Studio](https://local.drizzle.studio/) to inspect the local database |
+| `npm run deploy:secrets` | Push Doppler secrets to the production CF Worker; pass `-- staging` to target staging |
 | `npm run dev:generate-signature` | Generate a request body with a `requestTime` property and a valid `Authorization` bearer token |
 | `npm run dev:types` | Regenerate TypeScript types from `wrangler.jsonc` bindings |
 

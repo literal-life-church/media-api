@@ -29,8 +29,6 @@ There are two kinds of controllers in this project:
 
 ### Constructor Injection
 
-All dependencies use constructor injection with default parameter values, making them testable without a DI framework:
-
 All dependencies use constructor injection with default parameter values. This makes every class independently testable without a DI framework.
 
 **UseCases** (with a `D1Database`):
@@ -176,6 +174,7 @@ Here are all of the resources we use for documentation:
 - Cloudflare D1: <https://developers.cloudflare.com/d1/>
 - Cloudflare Durable Objects: <https://developers.cloudflare.com/durable-objects/>
 - Cloudflare Workers: <https://developers.cloudflare.com/workers/>
+- Doppler: <https://docs.doppler.com/>
 - Drizzle: <https://orm.drizzle.team/docs/overview>
 - Hono: <https://hono.dev/>
 - Zod: <https://zod.dev/>
@@ -187,6 +186,7 @@ Here are all of the resources we use for documentation:
 - Cloudflare D1: <https://developers.cloudflare.com/d1/llms.txt>
 - Cloudflare Durable Objects: <https://developers.cloudflare.com/durable-objects/llms.txt>
 - Cloudflare Workers: <https://developers.cloudflare.com/workers/llms.txt>
+- Doppler: <https://docs.doppler.com/llms.txt>
 - Drizzle: <https://orm.drizzle.team/llms.txt>
 - Hono: <https://hono.dev/llms.txt>
 - Zod: <https://zod.dev/llms.txt>

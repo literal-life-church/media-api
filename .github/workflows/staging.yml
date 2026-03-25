@@ -1,0 +1,47 @@
+name: Staging
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - uses: dopplerhq/cli-action@v3
+
+      - name: Export Doppler secrets
+        run: |
+          echo "NODE_ENV=staging" >> "$GITHUB_ENV"
+          doppler secrets download --no-file --format json --token "$DOPPLER_TOKEN" | \
+            jq -r 'to_entries[] | "\(.key)=\(.value)"' >> "$GITHUB_ENV"
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_STAGING }}
+
+      - name: Migrate staging database
+        run: npm run db:migrate
+
+      - name: Sync secrets to Cloudflare Worker
+        run: |
+          doppler secrets download --no-file --format json --token "$DOPPLER_TOKEN" | \
+            npx wrangler secret bulk --env staging
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_STAGING }}
+
+      - name: Deploy to staging
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ env.CLOUDFLARE_API_TOKEN }}
+          command: deploy --env staging
