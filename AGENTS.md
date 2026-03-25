@@ -50,13 +50,13 @@ There are two kinds of controllers in this project:
 All dependencies use constructor injection with default parameter values, making them testable without a DI framework:
 
 ```typescript
-// Use case with injectable data source
+// Example of a constructor in a UseCase, when you control the entire signature
 constructor(
     d1: D1Database,
     private readonly dataSource: MyDataSource = new MyDataSource(d1)
 ) { }
 
-// Controller with injectable dependency (uses RouteOptions, not D1Database)
+// Example of a OpenAPIRoute Controller with injectable dependency (always expects a RouteOptions parameter first)
 constructor(
     params: RouteOptions,
     private readonly mapper: MyMapper = new MyMapper()
@@ -135,15 +135,15 @@ Your knowledge of Cloudflare Workers APIs and limits may be outdated. Always ret
 
 ### Docs
 
-- https://developers.cloudflare.com/workers/
-- MCP: `https://docs.mcp.cloudflare.com/mcp`
+- Main docs site: <https://developers.cloudflare.com/workers/>
+- MCP: <https://docs.mcp.cloudflare.com/mcp>
 
 For all limits and quotas, retrieve from the product's `/platform/limits/` page. eg. `/workers/platform/limits`
 
 ### Errors
 
 - **Error 1102** (CPU/Memory exceeded): Retrieve limits from `/workers/platform/limits/`
-- **All errors**: https://developers.cloudflare.com/workers/observability/errors/
+- **All errors**: <https://developers.cloudflare.com/workers/observability/errors/>
 
 ### Product Docs
 
@@ -174,5 +174,3 @@ await this.ctx.storage.deleteAlarm();
 #### Alarm Lifecycle
 
 When `alarm()` fires, the alarm is already consumed by the CF runtime. There is no need to call `deleteAlarm()` from within `alarm()` — it would be a no-op. The only work needed inside `alarm()` is the cleanup your job was scheduled to perform (e.g., deleting DB rows).
-
-
