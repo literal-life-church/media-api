@@ -31,7 +31,7 @@ The API will be available at `http://localhost:8787/`. Interactive docs are at `
 | `npm run db:generate` | Generate a new migration from schema changes |
 | `npm run db:migrate` | Apply all pending migrations to the local database |
 | `npm run db:reset` | Delete the local SQLite database files (prompts for confirmation) |
-| `npm run db:studio` | Open Drizzle Studio to inspect the local database |
+| `npm run db:studio` | Open [Drizzle Studio](https://local.drizzle.studio/) to inspect the local database |
 | `npm run dev:generate-signature` | Generate a valid `requestTime` and `Authorization` bearer token for testing |
 | `npm run dev:types` | Regenerate TypeScript types from `wrangler.jsonc` bindings |
 
