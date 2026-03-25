@@ -31,11 +31,3 @@ This project uses Drizzle v1 Beta (`1.0.0-beta.x`). The migration structure diff
 ## Workflow
 
 All development uses the Cloudflare Workers SDK with a local SQLite database — never a remote one.
-
-## LLMs
-
-Useful resources:
-
-- Cloudflare LLMs: <https://developers.cloudflare.com/llms.txt>
-- Cloudflare D1 LLMs: <https://developers.cloudflare.com/d1/llms.txt>
-- Drizzle: <https://orm.drizzle.team/llms.txt>
