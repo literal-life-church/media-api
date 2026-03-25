@@ -3,9 +3,6 @@
     "name": "media-api",
     "main": "src/index.ts",
     "compatibility_date": "2026-02-12",
-    "vars": {
-        "NODE_ENV": "production"
-    },
     "observability": {
         "enabled": true
     },
@@ -43,9 +40,6 @@
     "env": {
         "staging": {
             "name": "media-api-staging",
-            "vars": {
-                "NODE_ENV": "staging"
-            },
             "d1_databases": [
                 {
                     "binding": "DB",

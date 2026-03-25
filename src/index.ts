@@ -8,7 +8,7 @@ import { CancelEventController } from "./live-streaming/CancelEventController";
 import { description, version } from "../package.json";
 import { GetLiveEventController } from "./live-streaming/GetLiveEventController";
 import { HttpError } from "./shared/domain/model/error/HttpError";
-import { IS_DEV } from "./shared/config";
+import { IS_PROD } from "./shared/config";
 import { NotFoundError } from "./shared/domain/model/error/NotFoundError";
 import { PrewarmLiveEventController } from "./live-streaming/PrewarmLiveEventController";
 import { PublishLiveEventController } from "./live-streaming/PublishLiveEventController";
@@ -34,9 +34,9 @@ const openapi = fromHono(app, {
             },
         ],
     },
-    docs_url: IS_DEV ? "/try" : null,
-    redoc_url: IS_DEV ? "/docs" : null,
-    openapi_url: IS_DEV ? "/openapi.json" : null,
+    docs_url: IS_PROD ? null : "/try",
+    redoc_url: IS_PROD ? null : "/docs",
+    openapi_url: IS_PROD ? null : "/openapi.json",
 });
 
 openapi.registry.registerComponent("securitySchemes", "bearerAuth", {
