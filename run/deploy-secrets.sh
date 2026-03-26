@@ -8,7 +8,7 @@
 # 2. Deploys them as Cloudflare Worker secrets
 #
 # Usage:
-#   npm run deploy:secrets           — deploy to the production Worker
+#   npm run deploy:secrets            — deploy to the production Worker
 #   npm run deploy:secrets -- staging — deploy to the staging Worker
 #
 # See:
