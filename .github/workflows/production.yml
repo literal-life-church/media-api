@@ -29,7 +29,7 @@ jobs:
 
       - name: Export Doppler secrets
         run: |
-          SECRETS=$(doppler secrets download --no-file --format json --token "$DOPPLER_TOKEN")
+          SECRETS=$(doppler secrets download --no-file --format json --token "$DOPPLER_TOKEN" | jq 'del(.DOPPLER_CONFIG, .DOPPLER_ENVIRONMENT, .DOPPLER_PROJECT)')
           echo "$SECRETS" | jq -r 'to_entries[] | select(.key != "NODE_ENV") | "::add-mask::\(.value)"'
           echo "NODE_ENV=production" >> "$GITHUB_ENV"
           echo "$SECRETS" | jq -r 'to_entries[] | select(.key != "NODE_ENV") | "\(.key)=\(.value)"' >> "$GITHUB_ENV"
@@ -42,6 +42,7 @@ jobs:
       - name: Sync secrets to Cloudflare Worker
         run: |
           doppler secrets download --no-file --format json --token "$DOPPLER_TOKEN" | \
+            jq 'del(.DOPPLER_CONFIG, .DOPPLER_ENVIRONMENT, .DOPPLER_PROJECT)' | \
             npx wrangler secret bulk
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_PRODUCTION }}
