@@ -25,10 +25,7 @@ const openapi = fromHono(app, {
             version: version,
             description: description,
         },
-        servers: [
-            { url: "http://localhost:8787", description: "Development" },
-        ],
-        security: [
+security: [
             {
                 bearerAuth: [],
             },
