@@ -1,0 +1,61 @@
+{
+    "$schema": "node_modules/wrangler/config-schema.json",
+    "name": "media-api",
+    "main": "src/index.ts",
+    "compatibility_date": "2026-02-12",
+    "observability": {
+        "enabled": true
+    },
+    "compatibility_flags": [
+        "nodejs_compat"
+    ],
+    "assets": {
+        "directory": "./assets/",
+        "binding": "ASSETS"
+    },
+    "d1_databases": [
+        {
+            "binding": "DB",
+            "database_name": "media-api",
+            "database_id": "9f4a538c-ec95-421a-96b4-b3f51612de21",
+            "migrations_dir": "drizzle"
+        }
+    ],
+    "durable_objects": {
+        "bindings": [
+            {
+                "name": "EVENT_CANCELLATION_EXPIRATION_JOB",
+                "class_name": "EventCancellationExpirationJobDurableObject"
+            }
+        ]
+    },
+    "migrations": [
+        {
+            "tag": "v1",
+            "new_sqlite_classes": [
+                "EventCancellationExpirationJobDurableObject"
+            ]
+        }
+    ],
+    "env": {
+        "staging": {
+            "name": "media-api-staging",
+            "d1_databases": [
+                {
+                    "binding": "DB",
+                    "database_name": "media-api-staging",
+                    "database_id": "98172a08-0948-4385-bf46-cbf274f34d2c",
+                    "migrations_dir": "drizzle"
+                }
+            ],
+            "durable_objects": {
+                "bindings": [
+                    {
+                        "name": "EVENT_CANCELLATION_EXPIRATION_JOB",
+                        "class_name": "EventCancellationExpirationJobDurableObject"
+                    }
+                ]
+            }
+        }
+    }
+}
