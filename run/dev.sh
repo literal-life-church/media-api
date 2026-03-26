@@ -23,7 +23,8 @@ need_cmd() {
 }
 
 need_cmd doppler
+need_cmd grep
 need_cmd npx
 
-doppler secrets download --no-file --format env > "$ENV_FILE"
+doppler secrets download --no-file --format env | grep -v '^DOPPLER_' > "$ENV_FILE"
 npx wrangler dev

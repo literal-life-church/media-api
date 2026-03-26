@@ -22,6 +22,7 @@ need_cmd() {
 }
 
 need_cmd doppler
+need_cmd jq
 need_cmd npx
 
-doppler secrets download --no-file --format json | npx wrangler secret bulk ${1:+--env "$1"}
+doppler secrets download --no-file --format json | jq 'del(.DOPPLER_CONFIG, .DOPPLER_ENVIRONMENT, .DOPPLER_PROJECT)' | npx wrangler secret bulk ${1:+--env "$1"}
