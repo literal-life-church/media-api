@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Attach to Cloudflare Worker",
+            "type": "node",
+            "address": "127.0.0.1",
+            "request": "attach",
+            "port": 8787,
+            "localRoot": "/",
+            "remoteRoot": "/",
+            "restart": true,
+            "timeout": 1000000
+        }
+    ]
+}
