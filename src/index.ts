@@ -5,6 +5,7 @@ import { z } from "zod";
 
 import { AuthMiddleware } from "./shared/AuthMiddleware";
 import { CancelEventController } from "./live-streaming/CancelEventController";
+import { CorsMiddleware } from "./shared/CorsMiddleware";
 import { description, version } from "../package.json";
 import { GetLiveEventController } from "./live-streaming/GetLiveEventController";
 import { HttpError } from "./shared/domain/model/error/HttpError";
@@ -25,7 +26,7 @@ const openapi = fromHono(app, {
             version: version,
             description: description,
         },
-security: [
+        security: [
             {
                 bearerAuth: [],
             },
@@ -42,6 +43,9 @@ openapi.registry.registerComponent("securitySchemes", "bearerAuth", {
     bearerFormat: "HMAC-SHA256",
     description: "The SHA256 HMAC signature for the request. This should be included in the `Authorization` header as a `Bearer` token.<br><br>It is calculated by creating a SHA256 HMAC signature of the request body, adding in a shared secret key, and then encoding the result in base 64 format.<br><br>You can generate your own authorization token in your terminal by running `npm run dev:generate-signature`."
 });
+
+// Global middleware
+app.use("*", CorsMiddleware);
 
 // Endpoints that don't require auth
 openapi.get("/live-streaming", GetLiveEventController);
