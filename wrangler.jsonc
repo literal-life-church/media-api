@@ -36,5 +36,26 @@
                 "EventCancellationExpirationJobDurableObject"
             ]
         }
-    ]
+    ],
+    "env": {
+        "staging": {
+            "name": "media-api-staging",
+            "d1_databases": [
+                {
+                    "binding": "DB",
+                    "database_name": "media-api-staging",
+                    "database_id": "98172a08-0948-4385-bf46-cbf274f34d2c",
+                    "migrations_dir": "drizzle"
+                }
+            ],
+            "durable_objects": {
+                "bindings": [
+                    {
+                        "name": "EVENT_CANCELLATION_EXPIRATION_JOB",
+                        "class_name": "EventCancellationExpirationJobDurableObject"
+                    }
+                ]
+            }
+        }
+    }
 }

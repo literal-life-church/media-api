@@ -16,6 +16,7 @@ The middleware is applied via `openapi.use("/live-streaming/*", AuthMiddleware)`
 `config.ts` is the single source of truth for environment flags and authorization constants.
 
 - `IS_DEV` — true when `NODE_ENV === "development"` (the default when unset)
+- `IS_STAGING` — true when `NODE_ENV === "staging"`
 - `IS_PROD` — true when `NODE_ENV === "production"`
 - Authorization constants: signing algorithm, timestamp window (±1 minute), encoding format
 
