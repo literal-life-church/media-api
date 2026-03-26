@@ -13,7 +13,7 @@
 
 		"deploy:secrets": "run/deploy-secrets.sh",
 
-		"dev:generate-signature": "npx tsx run/generate-signature.ts",
+		"dev:generate-signature": "doppler run -- npx tsx run/generate-signature.ts",
 		"dev:types": "run/dev-types.sh"
 	},
 	"dependencies": {
