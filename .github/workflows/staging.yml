@@ -30,9 +30,9 @@ jobs:
       - name: Export Doppler secrets
         run: |
           SECRETS=$(doppler secrets download --no-file --format json --token "$DOPPLER_TOKEN")
-          echo "$SECRETS" | jq -r 'to_entries[] | "::add-mask::\(.value)"'
+          echo "$SECRETS" | jq -r 'to_entries[] | select(.key != "NODE_ENV") | "::add-mask::\(.value)"'
           echo "NODE_ENV=staging" >> "$GITHUB_ENV"
-          echo "$SECRETS" | jq -r 'to_entries[] | "\(.key)=\(.value)"' >> "$GITHUB_ENV"
+          echo "$SECRETS" | jq -r 'to_entries[] | select(.key != "NODE_ENV") | "\(.key)=\(.value)"' >> "$GITHUB_ENV"
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_STAGING }}
 
