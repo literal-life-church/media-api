@@ -39,6 +39,15 @@ jobs:
       - name: Migrate staging database
         run: npm run db:migrate
 
+      - name: Deploy to staging
+        id: deploy
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ env.CLOUDFLARE_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          command: deploy --env staging
+
       - name: Sync secrets to Cloudflare Worker
         run: |
           doppler secrets download --no-file --format json --token "$DOPPLER_TOKEN" | \
@@ -46,11 +55,3 @@ jobs:
             npx wrangler secret bulk --env staging
         env:
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_STAGING }}
-
-      - name: Deploy to staging
-        id: deploy
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-          command: deploy --env staging
