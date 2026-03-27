@@ -39,18 +39,20 @@ jobs:
       - name: Migrate production database
         run: npm run db:migrate
 
-      - name: Sync secrets to Cloudflare Worker
-        run: |
-          doppler secrets download --no-file --format json --token "$DOPPLER_TOKEN" | \
-            jq 'del(.DOPPLER_CONFIG, .DOPPLER_ENVIRONMENT, .DOPPLER_PROJECT)' | \
-            npx wrangler secret bulk
-        env:
-          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_PRODUCTION }}
-
       - name: Deploy to production
         id: deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ env.CLOUDFLARE_ACCOUNT_ID }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
           command: deploy
+
+        # --env="" is for an empty environment == top-level == production
+      - name: Sync secrets to Cloudflare Worker
+        run: |
+          doppler secrets download --no-file --format json --token "$DOPPLER_TOKEN" | \
+            jq 'del(.DOPPLER_CONFIG, .DOPPLER_ENVIRONMENT, .DOPPLER_PROJECT)' | \
+            npx wrangler secret bulk --env=""
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_PRODUCTION }}
