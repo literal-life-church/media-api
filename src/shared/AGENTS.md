@@ -11,6 +11,29 @@
 
 The middleware is applied via `openapi.use("/live-streaming/*", AuthMiddleware)`. The `GET /live-streaming` endpoint is registered **before** the middleware and is therefore public.
 
+## CorsMiddleware
+
+`CorsMiddleware.ts` is a Hono middleware registered globally in `src/index.ts` via `app.use("*", CorsMiddleware)`. It runs on every request before any route handler.
+
+It always sets:
+
+- `Connection: keep-alive`
+- `Vary` — appends the value of `CORS_VARY` to any existing `Vary` header
+- `X-Powered-By` — value of `X_POWERED_BY`
+
+When the request includes an `Origin` header that matches one of the entries in `CORS_ALLOWED_ORIGINS` (a comma-separated env var), it additionally sets:
+
+- `Access-Control-Allow-Origin` — the matched origin (exact value, not a wildcard)
+- `Access-Control-Allow-Credentials: true`
+- `Access-Control-Allow-Headers` — value of `CORS_ALLOWED_HEADERS`
+- `Access-Control-Allow-Methods` — value of `CORS_ALLOWED_METHODS`
+
+If the origin does not match (or no `Origin` header is present), the `Access-Control-Allow-*` headers are omitted entirely.
+
+For `OPTIONS` preflight requests with a matched origin, the middleware short-circuits with `204 No Content` before calling `next()`.
+
+All five CORS env vars (`CORS_ALLOWED_ORIGINS`, `CORS_ALLOWED_HEADERS`, `CORS_ALLOWED_METHODS`, `CORS_VARY`, `X_POWERED_BY`) are defined in `config.ts` and managed via Doppler.
+
 ## Environment Config
 
 `config.ts` is the single source of truth for environment flags and authorization constants.

@@ -1,7 +1,7 @@
 {
 	"name": "media-api",
 	"description": "General-purpose API layer for exposing public information for our live streams and archived sermons",
-	"version": "2026.03.01",
+	"version": "2026.03.02",
 	"private": true,
 	"scripts": {
         "dev": "run/dev.sh",
