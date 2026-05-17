@@ -1,7 +1,7 @@
 import { OpenAPIRoute, RouteOptions } from "chanfana";
 import { z } from "zod";
 
-import { type AppContext } from "../types";
+import { type AppContext } from "../index";
 import { CanceledEventMapper } from "./data/mapper/CanceledEventMapper";
 import { CancelEventDomainModelSchema } from "./domain/model/request/CancelEventDomainModel";
 import { CanceledLiveEventDomainModelSchema } from "./domain/model/response/CanceledLiveEventDomainModel";
@@ -35,8 +35,18 @@ export class CancelEventController extends OpenAPIRoute {
         const data = await this.getValidatedData<typeof this.schema>();
         const payload = data.body;
 
-        const useCase = new StoreCancellationUseCase(c.env.DB, c.env.EVENT_CANCELLATION_EXPIRATION_JOB);
-        await useCase.execute(payload.name, payload.reason, payload.timeOfEvent, payload.cancellationExpiration);
+        const useCase = new StoreCancellationUseCase(
+            c.env.DB,
+            c.env.EVENT_CANCELLATION_EXPIRATION_JOB,
+            c.env.STREAM_HUB
+        );
+
+        await useCase.execute(
+            payload.name,
+            payload.reason,
+            payload.timeOfEvent,
+            payload.cancellationExpiration
+        );
 
         return c.json(this.mapper.map(
             payload.name,

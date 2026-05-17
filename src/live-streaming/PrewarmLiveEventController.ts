@@ -1,7 +1,7 @@
 import { OpenAPIRoute, RouteOptions } from "chanfana";
 import { z } from "zod";
 
-import { type AppContext } from "../types";
+import { type AppContext } from "../index";
 import { NotAValidPrewarmLiveEventPayloadError } from "./domain/model/error/NotAValidPrewarmLiveEventPayloadError";
 import { OPENAPI_TAGS } from "./config";
 import { PrewarmLiveEventDomainModelSchema } from "./domain/model/request/PrewarmLiveEventDomainModel";
@@ -32,9 +32,13 @@ export class PrewarmLiveEventController extends OpenAPIRoute {
     };
 
     async handle(c: AppContext) {
-        const useCase = new StorePrewarmEventUseCase(c.env.DB, c.env.EVENT_CANCELLATION_EXPIRATION_JOB);
-        await useCase.execute();
+        const useCase = new StorePrewarmEventUseCase(
+            c.env.DB,
+            c.env.EVENT_CANCELLATION_EXPIRATION_JOB,
+            c.env.STREAM_HUB
+        );
 
+        await useCase.execute();
         return c.json(this.mapper.map("prewarming"), 201);
     }
 

@@ -6,7 +6,7 @@ export class EventCancellationExpirationJobDurableObject extends DurableObject<E
     constructor(
         ctx: DurableObjectState,
         env: Env,
-        private readonly deleteAllEventCacheUseCase: DeleteAllEventCacheUseCase = new DeleteAllEventCacheUseCase(env.DB)
+        private readonly deleteAllEventCacheUseCase: DeleteAllEventCacheUseCase = new DeleteAllEventCacheUseCase(env.DB, env.STREAM_HUB)
     ) {
         super(ctx, env);
     }
