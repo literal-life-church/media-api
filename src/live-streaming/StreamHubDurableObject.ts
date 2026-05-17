@@ -60,6 +60,7 @@ export class StreamHubDurableObject extends DurableObject<Env> {
             this.connections.delete(writer);
         }
 
+        console.info(`Broadcasted event "${STREAM_HUB_EVENT_NAME}" with status "${state.status}" to ${this.connections.size} subscribers.`);
         return new Response(null, { status: 204 });
     }
 
@@ -75,6 +76,7 @@ export class StreamHubDurableObject extends DurableObject<Env> {
         });
 
         this.ctx.waitUntil(this.pingLoop(writer, request.signal));
+        console.info(`New subscriber added. Total subscribers: ${this.connections.size}.`);
 
         return new Response(readable, {
             headers: {

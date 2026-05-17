@@ -5,8 +5,8 @@ import { EVENT_CANCELLATION_EXPIRATION_JOB_ID } from "../../config";
 export class ScheduleEventCancellationExpirationJobUseCase {
     constructor(
         d1: D1Database,
-        private readonly activeJobsDataSource: ActiveJobsDataSource = new ActiveJobsDataSource(d1),
-        private readonly eventCancellationExpirationJob: DurableObjectNamespace<EventCancellationExpirationJobDurableObject>
+        private readonly eventCancellationExpirationJob: DurableObjectNamespace<EventCancellationExpirationJobDurableObject>,
+        private readonly activeJobsDataSource: ActiveJobsDataSource = new ActiveJobsDataSource(d1)
     ) { }
 
     async execute(expirationTime: number): Promise<void> {
