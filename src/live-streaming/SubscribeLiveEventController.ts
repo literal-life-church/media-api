@@ -7,7 +7,7 @@ import { SubscribeLiveEventDomainModelSchema } from "./domain/model/response/Sub
 export class SubscribeToLiveEventStateChangesController extends OpenAPIRoute {
     schema = {
         tags: OPENAPI_TAGS,
-        summary: "Subscribe to live event state changes via Server-Sent Events",
+        summary: "Subscribe to Live Event state transitions via Server-Sent Events",
         security: [],
         responses: {
             ...SubscribeLiveEventDomainModelSchema(),
