@@ -1,9 +1,22 @@
+import { OpenAPIRoute } from "chanfana";
+
 import { type AppContext } from "../index";
-import { STREAM_HUB_ID } from "./config";
+import { OPENAPI_TAGS, STREAM_HUB_ID } from "./config";
+import { SubscribeLiveEventDomainModelSchema } from "./domain/model/response/SubscribeLiveEventDomainModel";
 
-export const SubscribeToLiveEventStateChangesController = async (c: AppContext): Promise<Response> => {
-    const objectId = c.env.STREAM_HUB.idFromName(STREAM_HUB_ID);
-    const stub = c.env.STREAM_HUB.get(objectId);
+export class SubscribeToLiveEventStateChangesController extends OpenAPIRoute {
+    schema = {
+        tags: OPENAPI_TAGS,
+        summary: "Subscribe to live event state changes via Server-Sent Events",
+        security: [],
+        responses: {
+            ...SubscribeLiveEventDomainModelSchema(),
+        },
+    };
 
-    return stub.fetch(c.req.raw);
-};
+    async handle(c: AppContext): Promise<Response> {
+        const objectId = c.env.STREAM_HUB.idFromName(STREAM_HUB_ID);
+        const stub = c.env.STREAM_HUB.get(objectId);
+        return stub.fetch(c.req.raw);
+    }
+}
