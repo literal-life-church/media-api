@@ -1,7 +1,7 @@
 import { OpenAPIRoute, RouteOptions } from "chanfana";
 import { z } from "zod";
 
-import { type AppContext } from "../index";
+import type { AppContext } from "../index";
 import { NotAValidPrewarmLiveEventPayloadError } from "./domain/model/error/NotAValidPrewarmLiveEventPayloadError";
 import { OPENAPI_TAGS } from "./config";
 import { PrewarmLiveEventDomainModelSchema } from "./domain/model/request/PrewarmLiveEventDomainModel";
