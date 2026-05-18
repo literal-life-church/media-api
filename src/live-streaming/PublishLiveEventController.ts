@@ -1,7 +1,7 @@
 import { OpenAPIRoute, RouteOptions } from "chanfana";
 import { z } from "zod";
 
-import { type AppContext } from "../index";
+import type { AppContext } from "../index";
 import { LiveEventMapper } from "./data/mapper/LiveEventMapper";
 import { NotAValidPublishLiveEventPayloadError } from "./domain/model/error/NotAValidPublishLiveEventPayloadError";
 import { OngoingLiveEventDomainModelSchema } from "./domain/model/response/OngoingLiveEventDomainModel";

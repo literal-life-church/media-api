@@ -1,7 +1,7 @@
 import { OpenAPIRoute } from "chanfana";
 import { z } from "zod";
 
-import { type AppContext } from "../index";
+import type { AppContext } from "../index";
 import { DeleteLiveEventUseCase } from "./domain/usecase/DeleteLiveEventUseCase";
 import { NoContentDomainModelSchema } from "../shared/domain/model/response/NoContentDomainModel";
 import { NotAValidUnpublishLiveEventPayloadError } from "./domain/model/error/NotAValidUnpublishLiveEventPayloadError";

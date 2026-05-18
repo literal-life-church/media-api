@@ -1,6 +1,6 @@
 import { OpenAPIRoute } from "chanfana";
 
-import { type AppContext } from "../index";
+import type { AppContext } from "../index";
 import { OPENAPI_TAGS, STREAM_HUB_ID } from "./config";
 import { SubscribeLiveEventDomainModelSchema } from "./domain/model/response/SubscribeLiveEventDomainModel";
 

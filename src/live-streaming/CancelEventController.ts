@@ -1,7 +1,7 @@
 import { OpenAPIRoute, RouteOptions } from "chanfana";
 import { z } from "zod";
 
-import { type AppContext } from "../index";
+import type { AppContext } from "../index";
 import { CanceledEventMapper } from "./data/mapper/CanceledEventMapper";
 import { CancelEventDomainModelSchema } from "./domain/model/request/CancelEventDomainModel";
 import { CanceledLiveEventDomainModelSchema } from "./domain/model/response/CanceledLiveEventDomainModel";
