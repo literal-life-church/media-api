@@ -38,7 +38,14 @@ export class StreamHubDurableObject extends DurableObject<Env> {
     }
 
     private async handleBroadcast(request: Request): Promise<Response> {
-        const state = await request.json() as LiveEventResponse;
+        let state: LiveEventResponse;
+
+        try {
+            state = await request.json() as LiveEventResponse;
+        } catch {
+            return new Response(null, { status: 400 });
+        }
+
         const message = this.encoder.encode(`event: ${STREAM_HUB_EVENT_NAME}\ndata: ${JSON.stringify(state)}\n\n`);
         const shouldClose = STREAM_HUB_CLOSING_STATUSES.has(state.status);
         const dead: WritableStreamDefaultWriter<Uint8Array>[] = [];
