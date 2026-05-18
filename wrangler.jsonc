@@ -26,6 +26,10 @@
             {
                 "name": "EVENT_CANCELLATION_EXPIRATION_JOB",
                 "class_name": "EventCancellationExpirationJobDurableObject"
+            },
+            {
+                "name": "STREAM_HUB",
+                "class_name": "StreamHubDurableObject"
             }
         ]
     },
@@ -34,6 +38,12 @@
             "tag": "v1",
             "new_sqlite_classes": [
                 "EventCancellationExpirationJobDurableObject"
+            ]
+        },
+        {
+            "tag": "v2",
+            "new_sqlite_classes": [
+                "StreamHubDurableObject"
             ]
         }
     ],
@@ -53,6 +63,10 @@
                     {
                         "name": "EVENT_CANCELLATION_EXPIRATION_JOB",
                         "class_name": "EventCancellationExpirationJobDurableObject"
+                    },
+                    {
+                        "name": "STREAM_HUB",
+                        "class_name": "StreamHubDurableObject"
                     }
                 ]
             }
