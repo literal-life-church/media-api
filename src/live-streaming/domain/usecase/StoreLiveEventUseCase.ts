@@ -20,6 +20,6 @@ export class StoreLiveEventUseCase {
         await this.cancelJobUseCase.execute();
         await this.liveEventDataSource.createOrUpdateLiveEvent(videoId, name, description);
         await this.broadcastUseCase.execute();
-        await this.goLivePushNotificationUseCase.execute(name);
+        await this.goLivePushNotificationUseCase.execute(name, videoId);
     }
 }
