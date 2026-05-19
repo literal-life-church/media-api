@@ -7,7 +7,7 @@ export class SendPushNotificationUseCase {
         private readonly idempotencyCalculator: IdempotencyCalculatorUseCase = new IdempotencyCalculatorUseCase()
     ) { }
 
-    async execute(payload: PushNotificationPayloadDomainModel): Promise<void> {
+    async execute(payload: PushNotificationPayloadDomainModel): Promise<boolean> {
         const body = {
             app_id: PUSH_APP_ID,
             target_channel: PUSH_TARGET_CHANNEL,
@@ -41,10 +41,13 @@ export class SendPushNotificationUseCase {
 
             if (!response.ok) {
                 console.error(`Push notification failed with status ${response.status}:`, await response.text());
-                return;
+                return false;
             }
+
+            return true;
         } catch (error) {
             console.error("Failed to send push notification:", error);
+            return false;
         }
     }
 }

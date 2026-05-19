@@ -12,7 +12,7 @@ export class SendGoLivePushNotificationUseCase {
     async execute(eventName: string, videoId: string): Promise<void> {
         const thumbnailUrl = this.youtubeThumbnailMapper.map(videoId);
 
-        await this.sendPushNotificationUseCase.execute({
+        const success = await this.sendPushNotificationUseCase.execute({
             title: GO_LIVE_HEADING,
             content: `${eventName} is now live.`,
             segmentToNotify: GO_LIVE_SEGMENT,
@@ -25,6 +25,10 @@ export class SendGoLivePushNotificationUseCase {
             notificationGroupId: GO_LIVE_WEB_PUSH_TOPIC,
         });
 
-        console.info("Sent Go Live push notification");
+        if (success) {
+            console.info("Sent Go Live push notification");
+        } else {
+            console.error("Failed to send Go Live push notification");
+        }
     }
 }
