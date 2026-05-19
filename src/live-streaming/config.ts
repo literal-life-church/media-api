@@ -12,9 +12,9 @@ export const STREAM_HUB_PING_INTERVAL_MS = 30_000;
 export const OPENAPI_TAGS = ["Live Streaming"];
 
 // Push Notifications: Go Live
-export const GO_LIVE_HEADING = "Now Live";
+export const GO_LIVE_NOTIFICATION_CLICK_URL = EnvironmentVariableDataSource("GO_LIVE_PUSH_NOTIFICATION_URL") || "";
+export const GO_LIVE_NOTIFICATION_GROUP_ID = "literal_life_church_live_event_go_live";
 export const GO_LIVE_NOTIFICATION_NAME = "go_live";
 export const GO_LIVE_SEGMENT = "go_live";
+export const GO_LIVE_TITLE = "Now Live";
 export const GO_LIVE_TTL = 10_800;
-export const GO_LIVE_URL = EnvironmentVariableDataSource("GO_LIVE_PUSH_NOTIFICATION_URL") || "";
-export const GO_LIVE_WEB_PUSH_TOPIC = "literal_life_church_live_event_go_live";
