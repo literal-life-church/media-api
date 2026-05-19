@@ -30,8 +30,8 @@ export const CorsMiddleware = async (context: Context, next: Next) => {
     await next();
 
     // Build the response explicitly rather than relying on Hono's context.header() injection.
-    // Hono's finalize() step cannot reliably wrap streaming responses returned directly from
-    // Durable Object stubs, so CORS headers would be silently dropped for SSE connections.
+    // Hono's finalize() step cannot reliably wrap streaming responses (e.g. SSE connections),
+    // so CORS headers would be silently dropped regardless of how the stream was created.
     const headers = new Headers(context.res.headers);
     headers.set("Connection", "keep-alive");
     headers.set("Vary", cleanCommaList(CORS_VARY).join(", "));
