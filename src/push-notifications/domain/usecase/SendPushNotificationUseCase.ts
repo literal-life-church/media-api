@@ -43,8 +43,6 @@ export class SendPushNotificationUseCase {
                 console.error(`Push notification failed with status ${response.status}:`, await response.text());
                 return;
             }
-
-            console.info("Push notification sent successfully.");
         } catch (error) {
             console.error("Failed to send push notification:", error);
         }

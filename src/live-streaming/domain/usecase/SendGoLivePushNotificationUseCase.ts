@@ -24,5 +24,7 @@ export class SendGoLivePushNotificationUseCase {
             ttl: GO_LIVE_TTL,
             notificationGroupId: GO_LIVE_WEB_PUSH_TOPIC,
         });
+
+        console.info("Sent Go Live push notification");
     }
 }
