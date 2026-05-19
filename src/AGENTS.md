@@ -45,9 +45,9 @@ constructor(
 ```typescript
 constructor(
     d1: D1Database,
-    private readonly doNamespace: DurableObjectNamespace<EventCancellationExpirationJobDurableObject>,
+    private readonly eventCancellationExpirationJob: DurableObjectNamespace<EventCancellationExpirationJobDurableObject>,
+    private readonly cancelJobUseCase: DeleteEventCancellationExpirationJobUseCase = new DeleteEventCancellationExpirationJobUseCase(d1, eventCancellationExpirationJob)
     private readonly dataSource: MyDataSource = new MyDataSource(d1),
-    private readonly cancelJobUseCase: DeleteEventCancellationExpirationJobUseCase = new DeleteEventCancellationExpirationJobUseCase(d1, doNamespace)
 ) { }
 ```
 
