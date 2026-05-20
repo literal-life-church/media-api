@@ -12,6 +12,14 @@ export const STREAM_HUB_STATE_TRANSITION_EVENT_NAME = "event.state_transition";
 // OpenAPI
 export const OPENAPI_TAGS = ["Live Streaming"];
 
+// Push Notifications: Event Cancellation
+export const CANCELLATION_NOTIFICATION_CLICK_URL = EnvironmentVariableDataSource("CANCELLATION_PUSH_NOTIFICATION_URL") || "";
+export const CANCELLATION_NOTIFICATION_GROUP_ID = "literal_life_church_live_event_schedule_updates";
+export const CANCELLATION_NOTIFICATION_NAME = "schedule_updates";
+export const CANCELLATION_SEGMENT = "schedule_updates";
+export const CANCELLATION_TIMEZONE = EnvironmentVariableDataSource("TZ") || "America/New_York";
+export const CANCELLATION_TTL = 10_800;
+
 // Push Notifications: Go Live
 export const GO_LIVE_NOTIFICATION_CLICK_URL = EnvironmentVariableDataSource("GO_LIVE_PUSH_NOTIFICATION_URL") || "";
 export const GO_LIVE_NOTIFICATION_GROUP_ID = "literal_life_church_live_event_go_live";
