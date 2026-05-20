@@ -5,7 +5,7 @@ import { LiveEventDataSource } from "../../data/datasource/LiveEventDataSource";
 import { SendGoLivePushNotificationUseCase } from "./SendGoLivePushNotificationUseCase";
 import { StreamHubDurableObject } from "../../StreamHubDurableObject";
 
-export class StoreLiveEventUseCase {
+export class PublishLiveEventUseCase {
     constructor(
         d1: D1Database,
         eventCancellationExpirationJob: DurableObjectNamespace<EventCancellationExpirationJobDurableObject>,
