@@ -7,7 +7,7 @@ import { NotAValidPublishLiveEventPayloadError } from "./domain/model/error/NotA
 import { OngoingLiveEventDomainModelSchema } from "./domain/model/response/OngoingLiveEventDomainModel";
 import { OPENAPI_TAGS } from "./config";
 import { PublishLiveEventDomainModelSchema } from "./domain/model/request/PublishLiveEventDomainModel";
-import { StoreLiveEventUseCase } from "./domain/usecase/StoreLiveEventUseCase";
+import { PublishLiveEventUseCase } from "./domain/usecase/PublishLiveEventUseCase";
 import { UnauthorizedError } from "../shared/domain/model/error/UnauthorizedError";
 
 export class PublishLiveEventController extends OpenAPIRoute {
@@ -35,7 +35,7 @@ export class PublishLiveEventController extends OpenAPIRoute {
         const data = await this.getValidatedData<typeof this.schema>();
         const liveEventPayload = data.body;
 
-        const useCase = new StoreLiveEventUseCase(
+        const useCase = new PublishLiveEventUseCase(
             c.env.DB,
             c.env.EVENT_CANCELLATION_EXPIRATION_JOB,
             c.env.STREAM_HUB

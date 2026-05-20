@@ -6,7 +6,7 @@ import { NotAValidCancelEventPayloadError } from "../model/error/NotAValidCancel
 import { ScheduleEventCancellationExpirationJobUseCase } from "./ScheduleEventCancellationExpirationJobUseCase";
 import { StreamHubDurableObject } from "../../StreamHubDurableObject";
 
-export class StoreCancellationUseCase {
+export class CancelEventUseCase {
     constructor(
         d1: D1Database,
         eventCancellationExpirationJob: DurableObjectNamespace<EventCancellationExpirationJobDurableObject>,
