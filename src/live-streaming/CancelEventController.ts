@@ -2,10 +2,10 @@ import { OpenAPIRoute, RouteOptions } from "chanfana";
 import { z } from "zod";
 
 import type { AppContext } from "../index";
+import { CanceledEventDomainModelSchema } from "./domain/model/response/CanceledEventDomainModel";
 import { CanceledEventMapper } from "./data/mapper/CanceledEventMapper";
-import { CanceledLiveEventDomainModelSchema } from "./domain/model/response/CanceledLiveEventDomainModel";
 import { CancelEventDomainModelSchema } from "./domain/model/request/CancelEventDomainModel";
-import { CancelLiveEventUseCase } from "./domain/usecase/CancelLiveEventUseCase";
+import { CancelEventUseCase } from "./domain/usecase/CancelEventUseCase";
 import { NotAValidCancelEventPayloadError } from "./domain/model/error/NotAValidCancelEventPayloadError";
 import { OPENAPI_TAGS } from "./config";
 import { UnauthorizedError } from "../shared/domain/model/error/UnauthorizedError";
@@ -25,7 +25,7 @@ export class CancelEventController extends OpenAPIRoute {
             ...CancelEventDomainModelSchema(),
         },
         responses: {
-            ...CanceledLiveEventDomainModelSchema(),
+            ...CanceledEventDomainModelSchema(),
             ...NotAValidCancelEventPayloadError.schema(),
             ...UnauthorizedError.schema(),
         },
@@ -35,7 +35,7 @@ export class CancelEventController extends OpenAPIRoute {
         const data = await this.getValidatedData<typeof this.schema>();
         const payload = data.body;
 
-        const useCase = new CancelLiveEventUseCase(
+        const useCase = new CancelEventUseCase(
             c.env.DB,
             c.env.EVENT_CANCELLATION_EXPIRATION_JOB,
             c.env.STREAM_HUB
