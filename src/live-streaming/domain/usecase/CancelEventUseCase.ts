@@ -4,6 +4,7 @@ import { EventCancellationExpirationJobDurableObject } from "../../EventCancella
 import { LiveEventDataSource } from "../../data/datasource/LiveEventDataSource";
 import { NotAValidCancelEventPayloadError } from "../model/error/NotAValidCancelEventPayloadError";
 import { ScheduleEventCancellationExpirationJobUseCase } from "./ScheduleEventCancellationExpirationJobUseCase";
+import { SendCancellationPushNotificationUseCase } from "./SendCancellationPushNotificationUseCase";
 import { StreamHubDurableObject } from "../../StreamHubDurableObject";
 
 export class CancelEventUseCase {
@@ -13,6 +14,7 @@ export class CancelEventUseCase {
         streamHub: DurableObjectNamespace<StreamHubDurableObject>,
         private readonly broadcastUseCase: BroadcastStateTransitionUseCase = new BroadcastStateTransitionUseCase(d1, streamHub),
         private readonly cancelJobUseCase: DeleteEventCancellationExpirationJobUseCase = new DeleteEventCancellationExpirationJobUseCase(d1, eventCancellationExpirationJob),
+        private readonly cancellationPushNotificationUseCase: SendCancellationPushNotificationUseCase = new SendCancellationPushNotificationUseCase(),
         private readonly liveEventDataSource: LiveEventDataSource = new LiveEventDataSource(d1),
         private readonly scheduleJobUseCase: ScheduleEventCancellationExpirationJobUseCase = new ScheduleEventCancellationExpirationJobUseCase(d1, eventCancellationExpirationJob),
         private readonly now: () => Date = () => new Date()
@@ -33,6 +35,7 @@ export class CancelEventUseCase {
         const expirationTime = new Date(timeOfEvent).getTime() + cancellationExpiration;
         await this.scheduleJobUseCase.execute(expirationTime);
         await this.broadcastUseCase.execute();
+        await this.cancellationPushNotificationUseCase.execute(name, cancellationReason, timeOfEvent);
 
         console.info(`Stored cancellation for event "${name}" with reason "${cancellationReason}". Scheduled automatic expiration job to clear this message at ${new Date(expirationTime).toISOString()}.`);
     }
