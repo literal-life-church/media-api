@@ -1,7 +1,7 @@
 import { DurableObject } from "cloudflare:workers";
 
 import { LiveEventResponse } from "./domain/model/response/LiveEventStatusDomainModel";
-import { STREAM_HUB_CLOSING_STATUSES, STREAM_HUB_EVENT_NAME, STREAM_HUB_PING_INTERVAL_MS } from "./config";
+import { STREAM_HUB_CLOSE_CONNECTION_EVENT_NAME, STREAM_HUB_CLOSING_STATUSES, STREAM_HUB_PING_INTERVAL_MS, STREAM_HUB_STATE_TRANSITION_EVENT_NAME } from "./config";
 
 export class StreamHubDurableObject extends DurableObject<Env> {
     constructor(
@@ -46,15 +46,31 @@ export class StreamHubDurableObject extends DurableObject<Env> {
             return new Response(null, { status: 400 });
         }
 
-        const message = this.encoder.encode(`event: ${STREAM_HUB_EVENT_NAME}\ndata: ${JSON.stringify(state)}\n\n`);
+        const closeMessage = this.encoder.encode(`event: ${STREAM_HUB_CLOSE_CONNECTION_EVENT_NAME}\ndata: {}\n\n`);
+        const stateTransitionMessage = this.encoder.encode(`event: ${STREAM_HUB_STATE_TRANSITION_EVENT_NAME}\ndata: ${JSON.stringify(state)}\n\n`);
+
         const shouldClose = STREAM_HUB_CLOSING_STATUSES.has(state.status);
         const dead: WritableStreamDefaultWriter<Uint8Array>[] = [];
 
+        // Store the cancellation status in Durable Object storage if the event is canceled,
+        // so that new subscribers will be immediately notified of the cancellation and can
+        // avoid waiting for the next state transition to learn about it.
+        //
+        // There is no need for a user to continue waiting for a state transition when an
+        // event is canceled. All other state types are valid conditions for users to be
+        // waiting on, so we only need to special case the "canceled" status.
+        if (state.status === "canceled") {
+            await this.ctx.storage.put("canceled", true);
+        } else {
+            await this.ctx.storage.delete("canceled");
+        }
+
         for (const writer of this.connections) {
             try {
-                await writer.write(message);
+                await writer.write(stateTransitionMessage);
 
                 if (shouldClose) {
+                    await writer.write(closeMessage);
                     await writer.close();
                     dead.push(writer);
                 }
@@ -67,13 +83,32 @@ export class StreamHubDurableObject extends DurableObject<Env> {
             this.connections.delete(writer);
         }
 
-        console.info(`Broadcasted event "${STREAM_HUB_EVENT_NAME}" with status "${state.status}" to ${this.connections.size} subscribers.`);
+        console.info(`Broadcasted event "${STREAM_HUB_STATE_TRANSITION_EVENT_NAME}" with status "${state.status}" to ${this.connections.size} subscribers.`);
+
+        if (shouldClose)
+            console.info(`Sent the closing message event and then closed all connections due to event status "${state.status}".`);
+
         return new Response(null, { status: 204 });
     }
 
-    private handleSubscribe(request: Request): Response {
+    private async handleSubscribe(request: Request): Promise<Response> {
+        const isCanceled = await this.ctx.storage.get<boolean>("canceled");
         const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>();
         const writer = writable.getWriter();
+
+        if (isCanceled) {
+            await writer.write(this.encoder.encode(`event: ${STREAM_HUB_CLOSE_CONNECTION_EVENT_NAME}\ndata: {}\n\n`));
+            await writer.close();
+
+            console.info("Rejected subscriber: event is canceled.");
+
+            return new Response(readable, {
+                headers: {
+                    "Cache-Control": "no-cache",
+                    "Content-Type": "text/event-stream",
+                },
+            });
+        }
 
         this.connections.add(writer);
 
