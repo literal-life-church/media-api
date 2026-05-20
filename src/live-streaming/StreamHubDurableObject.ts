@@ -58,7 +58,7 @@ export class StreamHubDurableObject extends DurableObject<Env> {
         //
         // There is no need for a user to continue waiting for a state transition when an
         // event is canceled. All other state types are valid conditions for users to be
-        // waiting on, so we only need to special case the "canceled" status.
+        // waiting on, so we only need to consider the special "canceled" status.
         if (state.status === "canceled") {
             await this.ctx.storage.put("canceled", true);
         } else {
