@@ -93,22 +93,19 @@ export class StreamHubDurableObject extends DurableObject<Env> {
 
     private async handleSubscribe(request: Request): Promise<Response> {
         const isCanceled = await this.ctx.storage.get<boolean>("canceled");
-        const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>();
-        const writer = writable.getWriter();
 
         if (isCanceled) {
-            await writer.write(this.encoder.encode(`event: ${STREAM_HUB_CLOSE_CONNECTION_EVENT_NAME}\ndata: {}\n\n`));
-            await writer.close();
-
             console.info("Rejected subscriber: event is canceled.");
-
-            return new Response(readable, {
+            return new Response(`event: ${STREAM_HUB_CLOSE_CONNECTION_EVENT_NAME}\ndata: {}\n\n`, {
                 headers: {
                     "Cache-Control": "no-cache",
                     "Content-Type": "text/event-stream",
                 },
             });
         }
+
+        const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>();
+        const writer = writable.getWriter();
 
         this.connections.add(writer);
 
