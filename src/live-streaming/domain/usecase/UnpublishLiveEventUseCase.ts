@@ -4,7 +4,7 @@ import { EventCancellationExpirationJobDurableObject } from "../../EventCancella
 import { LiveEventDataSource } from "../../data/datasource/LiveEventDataSource";
 import { StreamHubDurableObject } from "../../StreamHubDurableObject";
 
-export class DeleteLiveEventUseCase {
+export class UnpublishLiveEventUseCase {
     constructor(
         d1: D1Database,
         eventCancellationExpirationJob: DurableObjectNamespace<EventCancellationExpirationJobDurableObject>,
