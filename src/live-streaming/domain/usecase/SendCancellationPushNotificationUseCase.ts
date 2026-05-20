@@ -15,7 +15,7 @@ export class SendCancellationPushNotificationUseCase {
 
         const success = await this.sendPushNotificationUseCase.execute({
             title: `${name} is Canceled`,
-            content: `${name} originally scheduled for ${dateTime} is canceled. ${plainReason}`,
+            content: `${name}, originally scheduled for ${dateTime}, is now canceled. ${plainReason}`,
 
             segmentToNotify: CANCELLATION_SEGMENT,
             notificationName: CANCELLATION_NOTIFICATION_NAME,
