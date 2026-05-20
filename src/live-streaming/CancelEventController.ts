@@ -3,11 +3,11 @@ import { z } from "zod";
 
 import type { AppContext } from "../index";
 import { CanceledEventMapper } from "./data/mapper/CanceledEventMapper";
-import { CancelEventDomainModelSchema } from "./domain/model/request/CancelEventDomainModel";
 import { CanceledLiveEventDomainModelSchema } from "./domain/model/response/CanceledLiveEventDomainModel";
+import { CancelEventDomainModelSchema } from "./domain/model/request/CancelEventDomainModel";
+import { CancelLiveEventUseCase } from "./domain/usecase/CancelLiveEventUseCase";
 import { NotAValidCancelEventPayloadError } from "./domain/model/error/NotAValidCancelEventPayloadError";
 import { OPENAPI_TAGS } from "./config";
-import { StoreCancellationUseCase } from "./domain/usecase/StoreCancellationUseCase";
 import { UnauthorizedError } from "../shared/domain/model/error/UnauthorizedError";
 
 export class CancelEventController extends OpenAPIRoute {
@@ -35,7 +35,7 @@ export class CancelEventController extends OpenAPIRoute {
         const data = await this.getValidatedData<typeof this.schema>();
         const payload = data.body;
 
-        const useCase = new StoreCancellationUseCase(
+        const useCase = new CancelLiveEventUseCase(
             c.env.DB,
             c.env.EVENT_CANCELLATION_EXPIRATION_JOB,
             c.env.STREAM_HUB
