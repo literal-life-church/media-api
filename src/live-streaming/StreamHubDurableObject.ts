@@ -96,6 +96,7 @@ export class StreamHubDurableObject extends DurableObject<Env> {
 
         if (isCanceled) {
             console.info("Rejected subscriber: event is canceled.");
+
             return new Response(`event: ${STREAM_HUB_CLOSE_CONNECTION_EVENT_NAME}\ndata: {}\n\n`, {
                 headers: {
                     "Cache-Control": "no-cache",
