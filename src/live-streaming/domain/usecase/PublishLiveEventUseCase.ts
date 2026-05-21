@@ -21,5 +21,6 @@ export class PublishLiveEventUseCase {
         await this.liveEventDataSource.createOrUpdateLiveEvent(videoId, name, description);
         await this.broadcastUseCase.execute();
         await this.goLivePushNotificationUseCase.execute(name, videoId);
+        console.info(`Published live event "${name}" with video ID "${videoId}".`);
     }
 }

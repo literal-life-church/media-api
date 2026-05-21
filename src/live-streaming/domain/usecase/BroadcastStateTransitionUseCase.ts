@@ -19,5 +19,7 @@ export class BroadcastStateTransitionUseCase {
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(state),
         }));
+
+        console.info(`Triggered state transition broadcast with status "${state.status}".`);
     }
 }
