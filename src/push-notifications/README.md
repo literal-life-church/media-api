@@ -7,7 +7,7 @@ This module is a generic transport layer for sending push notifications via [One
 ```text
 Domain-Specific UseCase (builds payload)
   → SendPushNotificationUseCase (POSTs to OneSignal)
-      → IdempotencyCalculatorUseCase (generates UUID v5 key)
+     ↑ IdempotencyCalculatorUseCase (generates UUID v5 key)
 ```
 
 ## Environment Variables
