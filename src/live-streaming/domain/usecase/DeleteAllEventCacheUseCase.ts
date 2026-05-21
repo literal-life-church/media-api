@@ -16,5 +16,7 @@ export class DeleteAllEventCacheUseCase {
         await this.activeJobsDataSource.deletePendingEventCancellationExpirationJobs();
         await this.liveEventDataSource.deleteLiveEvent();
         await this.broadcastUseCase.execute();
+
+        console.info("Deleted all event cache from the database and any pending cancellation expiration jobs");
     }
 }

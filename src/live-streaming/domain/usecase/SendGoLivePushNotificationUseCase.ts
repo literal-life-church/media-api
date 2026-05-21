@@ -29,7 +29,7 @@ export class SendGoLivePushNotificationUseCase {
             notificationGroupId: GO_LIVE_NOTIFICATION_GROUP_ID,
         });
 
-        if (success) {
+        if (!success) {
             console.info("Sent Go Live push notification");
         } else {
             console.error("Failed to send Go Live push notification");

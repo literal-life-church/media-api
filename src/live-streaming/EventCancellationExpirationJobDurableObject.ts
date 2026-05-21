@@ -22,5 +22,6 @@ export class EventCancellationExpirationJobDurableObject extends DurableObject<E
 
     async scheduleExpiration(expirationTime: number): Promise<void> {
         await this.ctx.storage.setAlarm(expirationTime);
+        console.info(`Scheduled event cancellation expiration job for ${new Date(expirationTime).toISOString()}`);
     }
 }
