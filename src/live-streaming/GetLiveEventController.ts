@@ -1,6 +1,6 @@
 import { OpenAPIRoute } from "chanfana";
 
-import { type AppContext } from "../types";
+import type { AppContext } from "../index";
 import { GetLiveEventUseCase } from "./domain/usecase/GetLiveEventUseCase";
 import { LiveEventStatusDomainModelSchema } from "./domain/model/response/LiveEventStatusDomainModel";
 import { OPENAPI_TAGS } from "./config";

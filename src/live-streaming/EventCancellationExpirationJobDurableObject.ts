@@ -6,7 +6,7 @@ export class EventCancellationExpirationJobDurableObject extends DurableObject<E
     constructor(
         ctx: DurableObjectState,
         env: Env,
-        private readonly deleteAllEventCacheUseCase: DeleteAllEventCacheUseCase = new DeleteAllEventCacheUseCase(env.DB)
+        private readonly deleteAllEventCacheUseCase: DeleteAllEventCacheUseCase = new DeleteAllEventCacheUseCase(env.DB, env.STREAM_HUB)
     ) {
         super(ctx, env);
     }
@@ -22,5 +22,6 @@ export class EventCancellationExpirationJobDurableObject extends DurableObject<E
 
     async scheduleExpiration(expirationTime: number): Promise<void> {
         await this.ctx.storage.setAlarm(expirationTime);
+        console.info(`Scheduled event cancellation expiration job for ${new Date(expirationTime).toISOString()}`);
     }
 }

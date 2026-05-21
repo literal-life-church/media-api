@@ -10,8 +10,15 @@ It is capable of these high-level tasks:
   - `POST /live-streaming/prewarm` — signal that a live event is being prepared
   - `DELETE /live-streaming` — take an event offline
   - `GET /live-streaming` — public read of current event state (no auth required)
+  - `GET /live-streaming/subscribe` — public Server-Sent Events stream delivering real-time state transitions to browsers actively viewing the event page (no auth required)
 
-Publishing, canceling, prewarming, and unpublishing require HMAC-SHA256 authentication. Reading does not.
+Publishing, canceling, prewarming, and unpublishing require HMAC-SHA256 authentication. Reading and subscribing do not.
+
+- **Push Notifications:** sends OneSignal push notifications to opted-in browsers when key state transitions occur:
+  - Go-live (`POST /live-streaming/go-live`) — notifies the `go_live` segment
+  - Event cancellation (`POST /live-streaming/cancel`) — notifies the `schedule_updates` segment with the event name, original scheduled time, and cancellation reason
+
+  Push notification failures are logged but never propagate — they are best-effort and do not affect the API response.
 
 ## Commands Useful in Development
 

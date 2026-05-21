@@ -1,3 +1,5 @@
+import type { Context } from "hono";
+
 import { ContentfulStatusCode } from "hono/utils/http-status";
 import { extendZodWithOpenApi, fromHono } from "chanfana";
 import { Hono } from "hono";
@@ -13,10 +15,13 @@ import { IS_PROD } from "./shared/config";
 import { NotFoundError } from "./shared/domain/model/error/NotFoundError";
 import { PrewarmLiveEventController } from "./live-streaming/PrewarmLiveEventController";
 import { PublishLiveEventController } from "./live-streaming/PublishLiveEventController";
+import { SubscribeToLiveEventStateChangesController } from "./live-streaming/SubscribeLiveEventController";
 import { UnknownError } from "./shared/domain/model/error/UnknownError";
 import { UnpublishLiveEventController } from "./live-streaming/UnpublishLiveEventController";
 
 extendZodWithOpenApi(z);
+
+export type AppContext = Context<{ Bindings: Env }>;
 
 const app = new Hono<{ Bindings: Env }>();
 const openapi = fromHono(app, {
@@ -49,6 +54,7 @@ app.use("*", CorsMiddleware);
 
 // Endpoints that don't require auth
 openapi.get("/live-streaming", GetLiveEventController);
+openapi.get("/live-streaming/subscribe", SubscribeToLiveEventStateChangesController);
 
 // Authentication middleware
 openapi.use("/live-streaming/*", AuthMiddleware);
@@ -78,6 +84,7 @@ openapi.notFound((context) => {
 });
 
 // All Durable Object bindings must be exported from the entry module
-export { EventCancellationExpirationJobDurableObject } from "./live-streaming/EventCancellationExpirationJobDurableObject"
+export { EventCancellationExpirationJobDurableObject } from "./live-streaming/EventCancellationExpirationJobDurableObject";
+export { StreamHubDurableObject } from "./live-streaming/StreamHubDurableObject";
 
 export default app;
