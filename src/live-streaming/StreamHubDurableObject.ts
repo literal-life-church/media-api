@@ -83,10 +83,10 @@ export class StreamHubDurableObject extends DurableObject<Env> {
             this.connections.delete(writer);
         }
 
-        console.info(`Broadcasted event "${STREAM_HUB_STATE_TRANSITION_EVENT_NAME}" with status "${state.status}" to ${this.connections.size} subscribers.`);
+        console.info(`Broadcasted event "${STREAM_HUB_STATE_TRANSITION_EVENT_NAME}" with status "${state.status}" to ${this.connections.size} subscribers`);
 
         if (shouldClose)
-            console.info(`Sent the closing message event and then closed all connections due to event status "${state.status}".`);
+            console.info(`Sent the closing message event and then closed all connections due to event status "${state.status}"`);
 
         return new Response(null, { status: 204 });
     }
@@ -95,7 +95,7 @@ export class StreamHubDurableObject extends DurableObject<Env> {
         const isCanceled = await this.ctx.storage.get<boolean>("canceled");
 
         if (isCanceled) {
-            console.info("Rejected subscriber: event is canceled.");
+            console.info("Rejected subscriber: event is canceled");
 
             return new Response(`event: ${STREAM_HUB_CLOSE_CONNECTION_EVENT_NAME}\ndata: {}\n\n`, {
                 headers: {

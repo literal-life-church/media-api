@@ -18,5 +18,7 @@ export class PrewarmLiveEventUseCase {
         await this.cancelJobUseCase.execute();
         await this.liveEventDataSource.createOrUpdatePrewarmEvent();
         await this.broadcastUseCase.execute();
+
+        console.info("Prewarmed live event and broadcasted to clients");
     }
 }

@@ -15,6 +15,7 @@ export class DeleteEventCancellationExpirationJobUseCase {
 
         await stub.cancelExpiration();
         await this.activeJobsDataSource.deletePendingEventCancellationExpirationJobs();
+
         console.info("Deleted pending event cancellation expiration job");
     }
 }

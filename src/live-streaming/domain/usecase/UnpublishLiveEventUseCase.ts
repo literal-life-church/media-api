@@ -18,5 +18,7 @@ export class UnpublishLiveEventUseCase {
         await this.cancelJobUseCase.execute();
         await this.liveEventDataSource.deleteLiveEvent();
         await this.broadcastUseCase.execute();
+
+        console.info("Unpublished live event, deleted it from the database, and broadcasted to clients");
     }
 }

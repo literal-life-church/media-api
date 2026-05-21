@@ -4,10 +4,11 @@ The information in this document applies across the entire `src/` directory and 
 
 ## Source Modules
 
-The `src/` directory contains two feature modules:
+The `src/` directory contains three feature modules:
 
-- **`live-streaming/`** — manages all live event state transitions (publish, cancel, prewarm, unpublish, read). See `src/live-streaming/AGENTS.md` for domain-specific guidance.
-- **`shared/`** — cross-cutting concerns used by all feature modules: auth middleware, error hierarchy, environment config, and shared mappers. See `src/shared/AGENTS.md` for guidance.
+- **`live-streaming/`** — manages all live event state transitions (publish, cancel, prewarm, unpublish, read, SSE subscribe). See `src/live-streaming/AGENTS.md` for domain-specific guidance.
+- **`push-notifications/`** — generic transport for sending push notifications via [OneSignal](https://onesignal.com/). Nothing in this domain is specific to any particular kind of push notification. Domain-specific push notifications will wrap the `SendPushNotificationUseCase` to provide more specific messaging. See `src/push-notifications/AGENTS.md` for guidance.
+- **`shared/`** — cross-cutting concerns used by all feature modules: auth middleware, CORS middleware, error hierarchy, environment config, and shared mappers. See `src/shared/AGENTS.md` for guidance.
 
 The entry point is `src/index.ts`, which registers all routes, applies auth middleware, and exports the Durable Object class required by the Cloudflare runtime.
 
@@ -117,7 +118,7 @@ This project is rather basic in its needs.
 - Most `npm run` commands are wrappers on top of [Cloudflare's Wrangler CLI](https://developers.cloudflare.com/workers/wrangler/).
 - Project runs on the **Cloudflare Workers** runtime.
   - Database: [Cloudflare D1](https://developers.cloudflare.com/d1/), a SQLite runtime.
-  - Scheduled jobs: [Cloudflare Durable Objects](https://developers.cloudflare.com/durable-objects/) with the Alarm API.
+  - Durable Objects: [Cloudflare Durable Objects](https://developers.cloudflare.com/durable-objects/) serve two roles in this project: scheduled job execution via the Alarm API, and persistent SSE fan-out via an in-memory connections set. Both use `idFromName()` for a stable singleton instance.
 - Key libraries:
   - [Hono](https://hono.dev/) — web application framework
   - [Chanfana](https://chanfana.pages.dev/) — OpenAPI schema generator and validator; built on top of Zod and generates the OpenAPI spec simultaneously with validation
@@ -163,6 +164,52 @@ await this.ctx.storage.deleteAlarm();
 
 When `alarm()` fires, the alarm is already consumed by the CF runtime. There is no need to call `deleteAlarm()` from within `alarm()` — it would be a no-op. The only work needed inside `alarm()` is the cleanup your job was scheduled to perform (e.g., deleting DB rows).
 
+#### Server-Sent Events Hub
+
+A Durable Object is a natural fit for a Server-Sent Events hub because it is a **singleton with in-memory state** — all Worker instances route to the same DO instance, so a single in-memory `Set` of writers is a reliable fan-out mechanism.
+
+The general pattern:
+
+```typescript
+// In the DO: hold writers in memory
+private readonly connections = new Set<WritableStreamDefaultWriter<Uint8Array>>();
+
+// Subscribe path — returns a streaming Response; registers the writer
+private handleSubscribe(request: Request): Response {
+    const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>();
+    const writer = writable.getWriter();
+    this.connections.add(writer);
+
+    request.signal.addEventListener("abort", () => {
+        this.connections.delete(writer);
+        writer.close().catch(() => {});
+    });
+
+    this.ctx.waitUntil(this.pingLoop(writer, request.signal)); // keeps DO alive
+
+    return new Response(readable, { headers: { "Content-Type": "text/event-stream", "Cache-Control": "no-cache" } });
+}
+
+// Broadcast path — writes an SSE event to all connected writers
+private async handleBroadcast(request: Request): Promise<Response> {
+    const payload = await request.json();
+    const message = encoder.encode(`event: my-event\ndata: ${JSON.stringify(payload)}\n\n`);
+
+    for (const writer of this.connections) {
+        await writer.write(message).catch(() => this.connections.delete(writer));
+    }
+
+    return new Response(null, { status: 204 });
+}
+```
+
+Key details:
+
+- **`ctx.waitUntil(pingLoop(...))`** — prevents the DO from being evicted while subscribers are connected. Without it, the DO may be terminated mid-stream. Also prevents load-balancers and proxies from shutting down a presumably idle connection if no data is pushed for an extended period of time.
+- **`request.signal` abort listener** — cleans up the writer when the client disconnects, preventing memory leaks in the connections set.
+- **Streaming response re-wrapping** — middleware that runs after `await next()` (e.g., CORS) must rebuild `context.res` via `new Response(context.res.body, { headers })` rather than using `context.header()`. Hono's `finalize()` step cannot reliably inject headers onto an already-streaming response body. You'll see this implemented in `/src/shared/CorsMiddleware.ts`.
+- **Immediately-closed streams** — if a subscriber should be rejected on connect (e.g., the event is already in a terminal state), return a plain `new Response("event: close\ndata: {}\n\n", { ... })` with a string body. Do not use a `TransformStream` that is written to and closed before the Response is returned — Cloudflare may not flush a pre-closed stream to the client.
+
 ## Docs, LLMs, and MCP
 
 Here are all of the resources we use for documentation:
@@ -177,6 +224,7 @@ Here are all of the resources we use for documentation:
 - Doppler: <https://docs.doppler.com/>
 - Drizzle: <https://orm.drizzle.team/docs/overview>
 - Hono: <https://hono.dev/>
+- OneSignal: <https://documentation.onesignal.com/>
 - Zod: <https://zod.dev/>
 
 **LLMs.txt:**
@@ -189,8 +237,11 @@ Here are all of the resources we use for documentation:
 - Doppler: <https://docs.doppler.com/llms.txt>
 - Drizzle: <https://orm.drizzle.team/llms.txt>
 - Hono: <https://hono.dev/llms.txt>
+- OneSignal: <https://onesignal.com/llms.txt>
+- OneSignal Developer Docs: <https://documentation.onesignal.com/llms.txt>
 - Zod: <https://zod.dev/llms.txt>
 
 **MCP:**
 
-- MCP: <https://docs.mcp.cloudflare.com/mcp>
+- Cloudflare: <https://docs.mcp.cloudflare.com/mcp>
+- OneSignal: <https://server.smithery.ai/onesignal/onesignal>
