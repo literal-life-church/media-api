@@ -1,13 +1,13 @@
 import { OpenAPIRoute } from "chanfana";
 import { z } from "zod";
 
-import { type AppContext } from "../types";
-import { DeleteLiveEventUseCase } from "./domain/usecase/DeleteLiveEventUseCase";
+import type { AppContext } from "../index";
 import { NoContentDomainModelSchema } from "../shared/domain/model/response/NoContentDomainModel";
 import { NotAValidUnpublishLiveEventPayloadError } from "./domain/model/error/NotAValidUnpublishLiveEventPayloadError";
 import { OPENAPI_TAGS } from "./config";
 import { UnauthorizedError } from "../shared/domain/model/error/UnauthorizedError";
 import { UnpublishLiveEventDomainModelSchema } from "./domain/model/request/UnpublishLiveEventDomainModel";
+import { UnpublishLiveEventUseCase } from "./domain/usecase/UnpublishLiveEventUseCase";
 
 export class UnpublishLiveEventController extends OpenAPIRoute {
     schema = {
@@ -24,9 +24,13 @@ export class UnpublishLiveEventController extends OpenAPIRoute {
     };
 
     async handle(c: AppContext) {
-        const useCase = new DeleteLiveEventUseCase(c.env.DB, c.env.EVENT_CANCELLATION_EXPIRATION_JOB);
-        await useCase.execute();
+        const useCase = new UnpublishLiveEventUseCase(
+            c.env.DB,
+            c.env.EVENT_CANCELLATION_EXPIRATION_JOB,
+            c.env.STREAM_HUB
+        );
 
+        await useCase.execute();
         return c.body(null, 204);
     }
 

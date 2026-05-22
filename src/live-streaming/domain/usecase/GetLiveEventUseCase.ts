@@ -8,13 +8,13 @@ export class GetLiveEventUseCase {
     constructor(
         d1: D1Database,
         private readonly canceledEventMapper: CanceledEventMapper = new CanceledEventMapper(),
-        private readonly dataSource: LiveEventDataSource = new LiveEventDataSource(d1),
+        private readonly liveEventDataSource: LiveEventDataSource = new LiveEventDataSource(d1),
         private readonly liveEventMapper: LiveEventMapper = new LiveEventMapper(),
         private readonly statusOnlyMapper: StatusOnlyEventMapper = new StatusOnlyEventMapper()
     ) { }
 
     async execute(): Promise<LiveEventResponse> {
-        const row = await this.dataSource.getLiveEvent();
+        const row = await this.liveEventDataSource.getLiveEvent();
 
         if (!row) return this.statusOnlyMapper.map("offline");
         if (row.status === "live") return this.liveEventMapper.map(row.videoId, row.name, row.description);
