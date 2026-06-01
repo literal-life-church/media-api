@@ -196,6 +196,7 @@ private async handleBroadcast(request: Request): Promise<Response> {
     const message = encoder.encode(`event: my-event\ndata: ${JSON.stringify(payload)}\n\n`);
 
     for (const writer of this.connections) {
+        // See the key details section below about Stale Writer Eviction and how we handle those when writing to a stream
         await writer.write(message).catch(() => this.connections.delete(writer));
     }
 
