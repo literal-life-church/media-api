@@ -1,7 +1,7 @@
 import { DurableObject } from "cloudflare:workers";
 
 import { LiveEventResponse } from "./domain/model/response/LiveEventStatusDomainModel";
-import { STREAM_HUB_CLOSE_CONNECTION_EVENT_NAME, STREAM_HUB_CLOSING_STATUSES, STREAM_HUB_PING_INTERVAL_MS, STREAM_HUB_STATE_TRANSITION_EVENT_NAME } from "./config";
+import { STREAM_HUB_BROADCAST_TIMEOUT_MS, STREAM_HUB_CLOSE_CONNECTION_EVENT_NAME, STREAM_HUB_CLOSING_STATUSES, STREAM_HUB_PING_INTERVAL_MS, STREAM_HUB_PING_TIMEOUT_MS, STREAM_HUB_STATE_TRANSITION_EVENT_NAME } from "./config";
 
 export class StreamHubDurableObject extends DurableObject<Env> {
     constructor(
@@ -65,19 +65,21 @@ export class StreamHubDurableObject extends DurableObject<Env> {
             await this.ctx.storage.delete("canceled");
         }
 
-        for (const writer of this.connections) {
-            try {
-                await writer.write(stateTransitionMessage);
+        await Promise.allSettled(
+            Array.from(this.connections).map(async (writer) => {
+                try {
+                    await this.writeWithTimeout(writer, stateTransitionMessage, STREAM_HUB_BROADCAST_TIMEOUT_MS);
 
-                if (shouldClose) {
-                    await writer.write(closeMessage);
-                    await writer.close();
+                    if (shouldClose) {
+                        await this.writeWithTimeout(writer, closeMessage, STREAM_HUB_BROADCAST_TIMEOUT_MS);
+                        await writer.close();
+                        dead.push(writer);
+                    }
+                } catch {
                     dead.push(writer);
                 }
-            } catch {
-                dead.push(writer);
-            }
-        }
+            })
+        );
 
         for (const writer of dead) {
             this.connections.delete(writer);
@@ -132,11 +134,27 @@ export class StreamHubDurableObject extends DurableObject<Env> {
             if (signal.aborted) break;
 
             try {
-                await writer.write(this.encoder.encode(": ping\n\n"));
+                await this.writeWithTimeout(writer, this.encoder.encode(": ping\n\n"), STREAM_HUB_PING_TIMEOUT_MS);
             } catch {
                 this.connections.delete(writer);
                 break;
             }
         }
+    }
+
+    private writeWithTimeout(
+        writer: WritableStreamDefaultWriter<Uint8Array>,
+        message: Uint8Array,
+        timeoutMs: number
+    ): Promise<void> {
+        if (writer.desiredSize === null || writer.desiredSize <= 0)
+            return Promise.reject(new Error("writer is not ready"));
+
+        return Promise.race([
+            writer.write(message),
+            new Promise<never>((_, reject) =>
+                setTimeout(() => reject(new Error("write timeout")), timeoutMs)
+            )
+        ]);
     }
 }
