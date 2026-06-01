@@ -3,10 +3,13 @@ import { EnvironmentVariableDataSource } from "../shared/data/datasource/Environ
 
 // Durable Objects
 export const EVENT_CANCELLATION_EXPIRATION_JOB_ID = "event_cancellation_expiration";
+
+export const STREAM_HUB_BROADCAST_TIMEOUT_MS = 200;
 export const STREAM_HUB_CLOSE_CONNECTION_EVENT_NAME = "event.close_connection";
 export const STREAM_HUB_CLOSING_STATUSES = new Set<LiveEventResponse["status"]>(["canceled", "offline"]);
 export const STREAM_HUB_ID = "stream_hub";
 export const STREAM_HUB_PING_INTERVAL_MS = 30_000;
+export const STREAM_HUB_PING_TIMEOUT_MS = 5_000;
 export const STREAM_HUB_STATE_TRANSITION_EVENT_NAME = "event.state_transition";
 
 // OpenAPI
